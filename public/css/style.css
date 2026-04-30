@@ -1,0 +1,2084 @@
+/* --- Animations --- */
+@keyframes fadeInAnimation {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* --- Base Styles --- */
+:root {
+    --color-green-header: #0C4B05;
+    --color-green-button-light: #0C4B05;
+    --color-green-button-dark: #0C4B05;
+    --color-white: #ffffff;
+    --color-text-dark: #333333;
+    --color-input-border: #0C4B05;
+    --color-form-bg: #f9f9f9;
+    --color-shadow: rgba(0, 0, 0, 0.1);
+    --color-red: #cc0000;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+   /* animation: fadeInAnimation ease 3s;*/
+    animation-fill-mode: forwards;
+    animation-iteration-count: 1;
+    background-color: #f7f7f7;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+*/
+/* --- Buttons --- */
+.btn {
+    border: none;
+    border-radius: 25px;
+    color: var(--color-white);
+    cursor: pointer;
+    display: inline-block;
+    font-size: 1.1em;
+    padding: 12px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.btn-admin {
+    background-color: var(--color-green-button-dark);
+}
+
+.btn-admin:hover {
+    background-color: var(--color-green-header);
+}
+
+.btn-cancel {
+    background-color: var(--color-white);
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    color: var(--color-text-dark);
+    cursor: pointer;
+    font-size: 1em;
+    padding: 10px 20px;
+    width: 150px;
+}
+
+.btn-login,
+.btn-register {
+    background-color: var(--color-green-button-dark);
+    margin-top: 25px;
+    width: 250px; /* NEW: Define a fixed width smaller than 100% */
+    display: block !important; /* NEW: Override .btn flex property for centering */
+    margin-left: auto; /* NEW: Center the button horizontally */
+    margin-right: auto; /* NEW: Center the button horizontally */
+}
+
+.btn-login:hover,
+.btn-register:hover {
+    background-color: var(--color-green-header);
+}
+
+.btn-modal-exit {
+    background-color: var(--color-white);
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    color: var(--color-text-dark);
+    cursor: pointer;
+    flex: 1;
+    padding: 10px 20px;
+}
+
+.btn-modal-ok {
+    background-color: var(--color-green-button-dark);
+    border: none;
+    border-radius: 20px;
+    color: var(--color-white);
+    cursor: pointer;
+    flex: 1;
+    padding: 10px 20px;
+}
+
+.btn-student {
+    background-color: var(--color-green-button-light);
+    margin-bottom: 15px;
+}
+
+.btn-student:hover {
+    background-color: #589241;
+}
+
+.btn-submit {
+    background-color: var(--color-green-button-dark);
+    border: none;
+    border-radius: 25px;
+    color: var(--color-white);
+    cursor: pointer;
+    font-size: 1em;
+    padding: 10px 20px;
+    width: 150px;
+}
+
+/* --- Cards --- */
+.card-claims {
+    background-color: #fce5cd;
+    border: 1px solid #f6b26b;
+}
+
+.card-found {
+    background-color: #d9ead3;
+    border: 1px solid #93c47d;
+}
+
+.card-lost {
+    background-color: #fce5cd;
+    border: 1px solid #f6b26b;
+}
+
+.card-search {
+    background-color: #cfe2f3;
+    border: 1px solid #76a5af;
+}
+
+/* --- Forms & Inputs --- */
+.form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+    margin-top: 30px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: var(--color-green-header);
+    box-shadow: 0 0 5px var(--color-input-border);
+}
+
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="text"],
+.form-group input[type="tel"],
+.form-group select {
+    background-color: var(--color-form-bg);
+    border: 1px solid var(--color-input-border);
+    border-radius: 20px;
+    font-size: 1em;
+    outline: none;
+    padding: 10px 15px;
+    transition: border-color 0.3s;
+    width: 100%;
+}
+
+.form-group label {
+    color: var(--color-text-dark);
+    display: block;
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+
+.form-header-content {
+    margin-bottom: 20px;
+    max-width: 600px;
+    width: 90%;
+    padding: 30px 40px; /* matches .report-form-wrapper padding */
+    box-sizing: border-box;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.form-header-content h2 {
+    color: var(--color-text-dark);
+    font-size: 1.5em;
+}
+
+.form-header-content p {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.form-title {
+    color: var(--color-text-dark);
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.form-wrapper {
+    background-color: var(--color-white);
+    border: 1px solid var(--color-input-border);
+    border-radius: 20px;
+    box-shadow: 0 0 0 5px var(--color-green-header), 0 4px 15px var(--color-shadow);
+    margin: 50px auto;
+    max-width: 400px;
+    padding: 30px 40px;
+    width: 90%;
+}
+
+textarea {
+    background-color: var(--color-form-bg);
+    border: 1px solid var(--color-input-border);
+    border-radius: 20px;
+    font-family: Arial, sans-serif;
+    font-size: 1em;
+    height: 100px;
+    outline: none;
+    padding: 10px 15px;
+    resize: none;
+    width: 100%;
+}
+
+textarea:focus {
+    border-color: var(--color-green-header);
+    box-shadow: 0 0 5px var(--color-input-border);
+}
+
+/* --- Icons --- */
+.icon-claims {
+    color: #ff9966;
+}
+
+.icon-found {
+    color: #6aa84f;
+}
+
+.icon-lost {
+    color: #cc0000;
+}
+
+.icon-search {
+    color: #3c78d8;
+}
+
+.icon-text {
+    align-items: center;
+    display: flex;
+    gap: 15px;
+}
+
+.icon-text i {
+    border-radius: 5px;
+    font-size: 2em;
+    padding: 5px;
+}
+
+/* --- Layout & Containers --- */
+.back-link {
+    align-items: center;
+    color: var(--color-text-dark);
+    display: flex;
+    font-size: 0.9em;
+    margin-bottom: 15px;
+    text-decoration: none;
+}
+
+.back-link i {
+    margin-right: 5px;
+}
+
+.footer {
+    background-color: var(--color-green-header);
+    color: var(--color-white);
+    font-size: 0.9em;
+    margin-top: auto;
+    padding: 10px 0;
+    text-align: center;
+    width: 100%;
+}
+
+.google-login {
+    color: #666;
+    font-size: 0.9em;
+    margin: 15px 0;
+    text-align: center;
+}
+
+.google-login img {
+    height: 18px;
+    vertical-align: middle;
+}
+
+.login-options {
+    align-items: center;
+    display: flex;
+    font-size: 0.8em;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.login-options a,
+.register-link a {
+    color: var(--color-green-button-dark);
+    text-decoration: none;
+}
+
+.login-options a:hover,
+.register-link a:hover {
+    text-decoration: underline;
+}
+
+.logo-area {
+    align-items: center;
+    display: flex;
+    gap: 15px;
+}
+
+.logo-area .fa-map-marker-alt {
+    font-size: 1.8em;
+}
+
+.logo-area .logo-image {
+    flex-shrink: 0;
+    height: 50px;
+    max-width: 60px;
+    width: auto;
+}
+
+.logo-area h1 {
+    color: #ffffff;
+    font-size: 1.5em;
+    letter-spacing: 0.5px;
+    margin: 0;
+}
+
+.logo-area h3 {
+    color: #ffffff;
+    font-size: 0.9em;
+    font-weight: normal;
+    margin: 0;
+}
+
+.logo-area p {
+    color: #ffffff;
+    font-size: 0.8em;
+    opacity: 0.8;
+}
+
+.logo-header {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.logo-header h1 {
+    color: var(--color-green-header);
+    font-size: 1.5em;
+    margin-bottom: 2px;
+}
+
+.logo-header p {
+    color: var(--color-text-dark);
+    font-size: 0.8em;
+}
+
+.logo-icon {
+    height: 60px;
+    margin-bottom: 5px;
+    width: 60px;
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.main-content-wrapper {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: center;
+    padding-bottom: 40px;
+    width: 100%;
+    position: relative; /* allow absolutely positioned children to be positioned relative to this container */
+}
+
+.menu-card {
+    border-radius: 8px;
+    color: #333;
+    display: block;
+    margin-bottom: 15px;
+    padding: 15px;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.menu-card:last-child {
+    margin-bottom: 0;
+}
+
+.menu-card:hover {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.menu-card h3 {
+    font-size: 1.1em;
+    font-weight: bold;
+    margin: 10px 0 0 0;
+}
+
+.menu-card p {
+    color: #666;
+    font-size: 0.8em;
+}
+
+.menu-container {
+    background-color: white;
+    border: 1px solid #90ee90;
+    border-radius: 20px;
+    box-shadow: 0 0 0 5px #38761d, 0 4px 15px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    padding: 20px;
+    width: 90%;
+}
+
+.navbar {
+    align-items: center;
+    background-color: var(--color-green-header);
+    color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 30px;
+    width: 100%;
+}
+
+.report-form-wrapper {
+    /* Inner form area — visual container is `.report-container` now */
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    margin: 0;
+    max-height: calc(100vh - 100px);
+    max-width: 600px;
+    overflow-y: auto;
+    padding: 30px 40px;
+    width: 100%;
+}
+
+.report-form-wrapper textarea {
+    background-color: var(--color-form-bg);
+    border: 1px solid var(--color-input-border);
+    border-radius: 20px;
+    font-size: 1em;
+    min-height: 100px;
+    outline: none;
+    padding: 10px 15px;
+    resize: none;
+    transition: border-color 0.3s;
+    width: 100%;
+}
+
+/* New outer container that visually holds the header + form as one card */
+.report-container {
+    background-color: white;
+    border: 1px solid var(--color-input-border);
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    max-width: 600px;
+    overflow: hidden; /* clip corners for children */
+    width: 90%;
+}
+
+/* Back link (upper-left) */
+.back-link {
+    position: absolute; /* positioned relative to .main-content-wrapper so it scrolls with content */
+    left: 0; /* flush to left edge of the content area */
+    padding-left: 12px; /* small inset so the text isn't flush against the window edge */
+    top: 12px; /* offset from the top of the content area */
+    z-index: 1000;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-text-dark);
+    text-decoration: none;
+    font-size: 0.95em;
+    background: transparent;
+}
+.back-link i {
+    font-size: 1.05em;
+}
+
+@media (max-width: 600px) {
+    .back-link {
+        left: 8px;
+        top: 8px;
+        font-size: 0.95em;
+    }
+}
+
+.upload-box {
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    color: #999;
+    cursor: pointer;
+    margin-bottom: 20px;
+    padding: 30px;
+    text-align: center;
+}
+
+.upload-box i {
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+.upload-box input[type="file"] {
+    display: none;
+}
+
+.user-area {
+    align-items: center;
+    display: flex;
+    font-size: 1.1em;
+    gap: 15px;
+}
+
+.user-area .fa-cog,
+.user-area .fa-user-circle {
+    font-size: 1.3em;
+}
+
+/* --- Modals --- */
+.modal-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: space-between;
+}
+
+.modal-backdrop {
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    height: 100%;
+    justify-content: center;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.modal-confirmation .modal-content {
+    border: none;
+    padding: 20px 30px 30px;
+}
+
+.modal-confirmation h3 {
+    color: var(--color-text-dark);
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.modal-confirmation p {
+    color: #666;
+    font-size: 0.9em;
+    margin-bottom: 25px;
+}
+
+.modal-content {
+    background-color: var(--color-white);
+    border: 3px solid #3c78d8;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    max-width: 350px;
+    padding: 30px;
+    position: relative;
+    text-align: center;
+    width: 90%;
+}
+
+.modal-success .icon-circle {
+    align-items: center;
+    background-color: #6aa84f;
+    border-radius: 50%;
+    display: flex;
+    height: 60px;
+    justify-content: center;
+    margin: 0 auto 20px;
+    width: 60px;
+}
+
+.modal-success .icon-circle i {
+    color: var(--color-white);
+    font-size: 30px;
+}
+
+.modal-success .modal-content {
+    border-color: #3c78d8;
+    padding: 40px 30px;
+}
+
+.modal-success p {
+    color: var(--color-text-dark);
+    font-size: 1em;
+    line-height: 1.4;
+}
+
+/* --- Search & Item Lists Page Layout --- */
+
+.list-page-container {
+    padding: 20px 30px;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    flex-grow: 1; /* Allows it to consume space between header and footer */
+}
+
+.page-header-text {
+    /* Ensures the header block has minimal spacing above it */
+    margin-top: 0; 
+    padding-top: 0;
+    margin-bottom: 20px; /* Keeps standard spacing below the header */
+}
+
+.page-header-text h2 {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: var(--color-text-dark);
+}
+/* Notification Messages */
+.notification-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    animation: slideIn 0.3s ease-out;
+}
+
+.notification-message.success {
+    background: #4CAF50;
+    color: white;
+}
+
+.notification-message.error {
+    background: #f44336;
+    color: white;
+}
+
+.notification-message i.fa-times {
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+.notification-message i.fa-times:hover {
+    opacity: 1;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* Button with trash icon */
+.btn-delete-final i {
+    margin-right: 5px;
+}
+
+.page-header-text p {
+    font-size: 0.9em;
+    color: #666;
+}
+
+/* --- Filter Bar --- */
+.filter-bar {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.filter-bar .form-group {
+    flex: 1;
+    min-width: 180px;
+}
+
+/* Ensure inputs and selects match the rest of the site */
+.filter-bar input, .filter-bar select {
+    width: 100%;
+    padding: 8px 15px;
+    border-radius: 20px;
+    border: 1px solid var(--color-input-border);
+    background-color: var(--color-form-bg);
+}
+
+/* --- Item List Container --- */
+.item-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.item-card {
+    display: flex;
+    background-color: var(--color-white);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    align-items: center;
+    justify-content: space-between;
+}
+
+.item-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.item-image-box {
+    width: 80px;
+    height: 80px;
+    overflow: hidden;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.item-image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.item-details h4 {
+    font-size: 1.1em;
+    margin-bottom: 5px;
+    color: var(--color-text-dark);
+}
+
+.item-details p {
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 3px;
+}
+
+.item-meta {
+    display: flex;
+    gap: 15px;
+    font-size: 0.85em;
+    color: #999;
+    margin-top: 5px;
+}
+
+/* --- Action Area --- */
+.item-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.status-tag {
+    padding: 3px 8px;
+    border-radius: 15px;
+    font-size: 0.8em;
+    font-weight: bold;
+    text-align: center;
+    width: 50px;
+}
+
+.tag-lost {
+    background-color: #ffcccc; /* Light Red */
+    color: var(--color-red);
+}
+
+.tag-found {
+    background-color: #d9ead3; /* Light Green */
+    color: var(--color-green-card);
+}
+
+.btn-view-details {
+    background-color: #f7f7f7;
+    color: var(--color-text-dark);
+    border: 1px solid #ccc;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.btn-claim-item {
+    background-color: var(--color-green-button-dark);
+    color: var(--color-text-white);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+/* --- Item Details Modal (Item Details & Claim Form) --- */
+
+.modal-details {
+    padding: 20px;
+    width: 90%;
+    max-width: 500px;
+}
+
+.details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.details-content {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.details-image {
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.details-image img {
+    height: 100%;
+    width: auto;
+    object-fit: contain;
+}
+
+.detail-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1em;
+    color: var(--color-text-dark);
+}
+
+.detail-row i {
+    color: var(--color-green-card);
+    width: 20px;
+    text-align: center;
+}
+
+.detail-desc {
+    font-size: 0.95em;
+    line-height: 1.4;
+    padding: 10px;
+    border-top: 1px solid #eee;
+    margin-top: 10px;
+}
+
+/* Claim Form Modal Specifics */
+.modal-claim-form .modal-content {
+    max-width: 550px;
+}
+
+.claim-item-title {
+    background-color: #f7f7f7;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+.claim-item-title span {
+    display: block;
+    font-size: 0.9em;
+    font-weight: normal;
+    color: #666;
+}
+
+/* Match form inputs */
+.modal-claim-form input,
+.modal-claim-form textarea {
+    width: 100%;
+    padding: 10px 15px;
+    border-radius: 20px;
+    border: 1px solid var(--color-input-border);
+    outline: none;
+    background-color: var(--color-form-bg);
+    margin-top: 5px;
+}
+
+.modal-claim-form textarea {
+    min-height: 80px;
+    border-radius: 10px;
+}
+
+.claim-form-group {
+    margin-bottom: 15px;
+}
+.claim-form-group label {
+    font-size: 0.9em;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Modals already use .form-actions and .btn-submit/.btn-cancel */
+
+/* --- My Posts & Claims Page Layout --- */
+
+.my-activity-container {
+    padding: 20px 30px;
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+    flex-grow: 1; 
+}
+
+/* --- Tab Navigation --- */
+.tab-navigation {
+    display: flex;
+    background-color: #f0f0f0; /* Light background for the tab bar */
+    border-radius: 25px;
+    padding: 5px;
+    margin-bottom: 30px;
+}
+
+.tab-button {
+    flex: 1;
+    text-align: center;
+    padding: 10px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    color: #666; /* Default text color */
+}
+
+.tab-button.active {
+    background-color: var(--color-white); /* White background for the active tab */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color: var(--color-text-dark); /* Dark text for active tab */
+}
+
+/* --- Activity Item List --- */
+
+.activity-item-card {
+    display: flex;
+    background-color: var(--color-white);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.activity-item-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.activity-item-image-box {
+    width: 80px;
+    height: 80px;
+    overflow: hidden;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.activity-item-image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.activity-item-details h4 {
+    font-size: 1.1em;
+    margin-bottom: 5px;
+    color: var(--color-text-dark);
+}
+
+.activity-item-details p {
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 3px;
+}
+
+.activity-item-meta {
+    display: flex;
+    gap: 15px;
+    font-size: 0.85em;
+    color: #999;
+    margin-top: 5px;
+}
+
+/* --- Status Tags (specific to this page) --- */
+
+.activity-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+}
+
+.status-label {
+    padding: 3px 8px;
+    border-radius: 15px;
+    font-size: 0.8em;
+    font-weight: bold;
+    text-align: center;
+    min-width: 80px;
+}
+
+.tag-pending {
+    background-color: #f1c232; /* Yellow */
+    color: #fff;
+}
+.tag-approved {
+    background-color: var(--color-green-card); /* Green */
+    color: #fff;
+}
+.tag-under-review {
+    background-color: #ffd966; /* Light Orange/Yellow */
+    color: var(--color-text-dark);
+}
+.tag-lost-indicator {
+    background-color: #cc0000; /* Red */
+    color: #fff;
+    min-width: 40px;
+}
+.tag-found-indicator {
+    background-color: var(--color-green-card); /* Green */
+    color: #fff;
+    min-width: 40px;
+}
+
+/* --- Dashboard Grid Container --- */
+.dashboard-container {
+    padding: 20px 30px;
+    flex-grow: 1; 
+}
+
+.dashboard-header {
+    background-color: var(--color-green-light);
+    color: var(--color-text-white);
+    padding: 5px 15px;
+    display: inline-block;
+    border-radius: 5px;
+    margin-bottom: 25px;
+}
+.dashboard-header h2 {
+    font-size: 1.2em;
+    font-weight: normal;
+}
+
+/* --- THE BROKEN LAYOUT FIX IS HERE (Using an 8-column grid for centering) --- */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr); 
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* TOP ROW (4 Cards) - Each spans 2 columns */
+.dashboard-grid .card-link:nth-child(1),
+.dashboard-grid .card-link:nth-child(2),
+.dashboard-grid .card-link:nth-child(3),
+.dashboard-grid .card-link:nth-child(4) {
+    grid-column: span 2;
+}
+
+/* SECOND ROW (3 Cards) - Placed to be centered */
+.dashboard-grid .card-link:nth-child(5) {
+    grid-column: 2 / span 2; 
+}
+.dashboard-grid .card-link:nth-child(6) {
+    grid-column: 4 / span 2;
+}
+.dashboard-grid .card-link:nth-child(7) {
+    grid-column: 6 / span 2;
+}
+
+
+/* --- Card Appearance --- */
+.card {
+    min-height: 150px;
+    padding: 20px;
+    color: var(--color-text-white); /* Important for the red, blue, green cards */
+    border-radius: 8px;
+    /* Use Flexbox within the card to stack icon and text vertically */
+    display: flex; 
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.icon-box {
+    font-size: 2.5em; /* Makes the icons large */
+    margin-bottom: 15px;
+}
+
+.text-box {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+/* --- Card Colors --- */
+/* The colors were missing in your broken view */
+.card-yellow { background-color: #f1c232; color: #333; }
+.card-green { background-color: #6aa84f; }
+.card-red { background-color: #cc0000; }
+.card-blue-dark { background-color: #3c78d8; }
+.card-yellow-dark { background-color: #f1c232; color: #333; }
+.card-blue-light { background-color: #6d9eeb; }
+.card-grey { background-color: #a6a6a6; }
+
+/* --- Card Links --- */
+.card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block; /* This will make the whole card area clickable */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card-link:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* --- Rejected Posts Specific Styles --- */
+
+/* Style for the Rejected status tag on the item card */
+.status-tag.tag-rejected {
+    background-color: var(--color-red); /* Red background */
+    color: var(--color-white);
+}
+
+/* Style for the Rejection Reason box displayed inside the item card */
+.rejection-reason-box {
+    /* Use a light red background to highlight the rejection reason */
+    background-color: #ffe6e6; 
+    border-radius: 4px;
+    color: var(--color-red);
+    font-size: 0.9em;
+    padding: 5px 10px;
+    margin-top: 10px;
+    /* Ensure it doesn't wrap awkwardly */
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    width: 100%;
+}
+
+/* Style for the Restore Button */
+.btn-restore {
+    background-color: var(--color-yellow); /* Yellow background */
+    color: var(--color-text-dark); 
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9em;
+    min-width: 100px;
+    transition: background-color 0.2s;
+}
+
+.btn-restore:hover {
+    background-color: #fbd350; /* Slightly darker yellow on hover */
+}
+
+/* --- Claim Forms Specific Styles --- */
+
+/* Style for the 'Pending Verification' tag */
+.status-tag.tag-pending-verification {
+    background-color: var(--color-blue-light); /* Light Blue background */
+    color: var(--color-white);
+}
+
+/* New layout container for admin list pages (Pending, Approved, Rejected, Claims) */
+.admin-list-container {
+    padding: 20px 30px;
+    max-width: 900px; /* Constrain width for better readability */
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* Style for the list items in the admin view (Claim/Post) */
+.admin-item-card {
+    display: flex;
+    background-color: var(--color-white);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.admin-item-details {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    flex-grow: 1; /* Allows details section to take up space */
+}
+
+/* Admin action button group (View Details, Approve, Reject) */
+.admin-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    flex-shrink: 0; /* Prevents action column from shrinking */
+}
+
+.pending-count-tag, .rejected-count-tag, .approved-count-tag {
+    /* Base style for the colored count bubble (e.g., "2 Pending Claims") */
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 0.9em;
+    margin-bottom: 20px;
+}
+
+.pending-count-tag {
+    background-color: var(--color-yellow);
+    color: var(--color-white);
+}
+.rejected-count-tag {
+    background-color: var(--color-red);
+    color: var(--color-white);
+}
+.approved-count-tag {
+    background-color: var(--color-green-button-light);
+    color: var(--color-white);
+}
+
+/* --- Set Pick-up Modal (Set Pick-up Details) --- */
+.pickup-approval-banner {
+    background-color: #d9ead3; /* Light green banner */
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: var(--color-text-dark);
+}
+
+.pickup-approval-banner span {
+    display: block;
+    font-size: 0.85em;
+    font-weight: normal;
+    color: #444;
+}
+
+.pickup-details-box .static-info {
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 10px 15px;
+    background-color: #f0f0f0;
+    font-size: 1em;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.btn-approve-pickup {
+    background-color: var(--color-green-button-dark);
+    color: var(--color-white);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.2s;
+}
+
+.btn-reject-pickup {
+    background-color: var(--color-white);
+    color: var(--color-text-dark);
+    border: 1px solid #ccc;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1em;
+}
+/* --- General Admin List Layout and Structure --- */
+
+/* Style for the list container that holds all items */
+.admin-list-container {
+    padding: 20px 30px;
+    max-width: 900px; 
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* Style for each item card (Post or Claim) */
+.admin-item-card {
+    display: flex;
+    background-color: var(--color-white);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.admin-item-details {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    flex-grow: 1; 
+}
+
+/* Admin action button group (View Details, Approve, Reject, etc.) */
+.admin-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    flex-shrink: 0; 
+}
+
+/* Style for the colored count bubbles (e.g., "2 Pending Claims") */
+.pending-count-tag, .rejected-count-tag, .approved-count-tag {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 0.9em;
+    margin-bottom: 20px;
+}
+
+.pending-count-tag {
+    background-color: var(--color-yellow);
+    color: var(--color-white);
+}
+.rejected-count-tag {
+    background-color: var(--color-red);
+    color: var(--color-white);
+}
+.approved-count-tag {
+    background-color: var(--color-green-button-light);
+    color: var(--color-white);
+}
+
+/* --- Status & Reason Styles --- */
+
+/* Style for the 'Pending Verification' tag on Claim Forms */
+.status-tag.tag-pending-verification {
+    background-color: var(--color-blue-light); 
+    color: var(--color-white);
+}
+
+/* Style for the Rejected status tag */
+.status-tag.tag-rejected {
+    background-color: var(--color-red); 
+    color: var(--color-white);
+}
+
+/* Style for the Rejection Reason box displayed inside the item card */
+.rejection-reason-box {
+    background-color: #ffe6e6; 
+    border-radius: 4px;
+    color: var(--color-red);
+    font-size: 0.9em;
+    padding: 5px 10px;
+    margin-top: 10px;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    width: 100%;
+}
+
+/* Style for the 'Ready for Pick-up' tag on To Be Claimed list */
+.tag-ready-for-pickup {
+    background-color: var(--color-yellow); 
+    color: var(--color-white);
+}
+
+/* --- New Buttons for Admin Actions --- */
+
+/* Style for the Restore Button (Rejected Posts) */
+.btn-restore {
+    background-color: var(--color-yellow); 
+    color: var(--color-text-dark); 
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9em;
+    min-width: 100px;
+    transition: background-color 0.2s;
+}
+
+.btn-restore:hover {
+    background-color: #fbd350; 
+}
+
+/* Style for Mark as Resolved Button (To Be Claimed) */
+.btn-mark-resolved {
+    background-color: var(--color-blue-dark); /* <--- THIS SETS THE STATIC COLOR (BLUE) */
+    color: var(--color-white);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s;
+}
+
+
+.btn-approve {
+    background-color: var(--color-green-button-light); /* Green */
+    color: var(--color-white);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.9em;
+}
+
+.btn-reject {
+    background-color: var(--color-red); 
+    color: var(--color-white);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.9em;
+}
+/* --- Pick-up Details Modal Styles --- */
+
+/* Banner inside the modal showing item name/claimant */
+.pickup-approval-banner {
+    background-color: #d9ead3; 
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: var(--color-text-dark);
+}
+
+.pickup-approval-banner span {
+    display: block;
+    font-size: 0.85em;
+    font-weight: normal;
+    color: #444;
+}
+
+/* Style for static information boxes in the pick-up form */
+.pickup-details-box .static-info {
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 10px 15px;
+    background-color: #f0f0f0;
+    font-size: 1em;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.btn-approve-pickup {
+    background-color: var(--color-green-button-dark);
+    color: var(--color-white);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.2s;
+}
+
+.btn-reject-pickup {
+    background-color: var(--color-white);
+    color: var(--color-text-dark);
+    border: 1px solid #ccc;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1em;
+}
+/* --- NEW: Resolved Cases Count Tag --- */
+.resolved-count-tag {
+    /* Using a dark green/blue-light color to distinguish from Pending/Approved */
+    background-color: var(--color-blue-light); 
+    color: var(--color-white);
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 0.9em;
+    margin-bottom: 20px;
+}
+/*/////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+/* --- Appended Styles for User Management, Resolved Cases, and Alignment --- */
+
+/* --- NEW: Resolved Cases Count Tag --- */
+.resolved-count-tag {
+    /* Using a dark green/blue-light color to distinguish from Pending/Approved */
+    background-color: var(--color-blue-light); 
+    color: var(--color-white);
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 0.9em;
+    margin-bottom: 20px;
+}
+
+/* --- NEW: User Management Styles --- */
+
+/* Base container for a single user item */
+.user-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--color-white);
+    border-radius: 12px;
+    padding: 15px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    margin-bottom: 15px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-grow: 1;
+}
+
+.user-icon-box i {
+    font-size: 2.5em;
+    color: #666;
+}
+
+.user-details-text h4 {
+    font-size: 1.1em;
+    color: var(--color-text-dark);
+    margin-bottom: 3px;
+}
+
+.user-details-text p {
+    font-size: 0.9em;
+    color: #666;
+    margin: 0;
+}
+
+/* Tag for User Count (Green bubble for Total Users) */
+.user-count-tag {
+    background-color: var(--color-green-button-light);
+    color: var(--color-white);
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 0.9em;
+    min-width: 100px;
+    text-align: center;
+}
+
+/* --- ADMIN LIST ALIGNMENT REFINEMENT (Needed if content starts too low) --- */
+/* Add top padding to the list container to push content away from the header */
+.admin-list-container {
+    padding-top: 20px; 
+}
+
+/* ---------------------------------------------------------------------- */
+/* --- APPENDED FIXES TO ENSURE ALL PAGES RENDER CORRECTLY --- */
+/* ---------------------------------------------------------------------- */
+
+/* CRITICAL FIX: Re-enforcing the fundamental button display properties
+   (These ensure the buttons are rounded and icons/text are aligned) 
+*/
+.btn {
+    display: flex !important; /* Force display flex for icon alignment */
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important; 
+    border-radius: 25px !important;
+    padding: 12px !important;
+}
+
+/* FIX: Ensures the login wrapper centers its content */
+.main-content-wrapper {
+    align-items: center; 
+    justify-content: center;
+}
+
+
+/* --- STATUS TAGS & COUNT TAGS (NEWLY ADDED) --- */
+
+/* Style for the 'Pending Verification' tag on Claim Forms */
+.status-tag.tag-pending-verification {
+    background-color: var(--color-blue-light); 
+    color: var(--color-white);
+}
+
+/* Style for the Rejected status tag */
+.status-tag.tag-rejected {
+    background-color: var(--color-red); 
+    color: var(--color-white);
+}
+
+/* Style for the Rejection Reason box displayed inside the item card */
+.rejection-reason-box {
+    background-color: #ffe6e6; 
+    border-radius: 4px;
+    color: var(--color-red);
+    font-size: 0.9em;
+    padding: 5px 10px;
+    margin-top: 10px;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    width: 100%;
+}
+
+/* Style for the Restore Button */
+.btn-restore {
+    background-color: var(--color-yellow); 
+    color: var(--color-text-dark); 
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9em;
+    min-width: 100px;
+    transition: background-color 0.2s;
+}
+
+/* Style for Mark as Resolved Button (To Be Claimed) */
+.btn-mark-resolved {
+    background-color: var(--color-blue-dark); 
+    color: var(--color-white);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s;
+}
+
+/* --- User Management & Resolved Cases Styles --- */
+
+/* Base container for a single user item */
+.user-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--color-white);
+    border-radius: 12px;
+    padding: 15px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    margin-bottom: 15px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-grow: 1;
+}
+
+.user-icon-box i {
+    font-size: 2.5em;
+    color: #666;
+}
+
+.user-details-text h4 {
+    font-size: 1.1em;
+    color: var(--color-text-dark);
+    margin-bottom: 3px;
+}
+
+.user-details-text p {
+    font-size: 0.9em;
+    color: #666;
+    margin: 0;
+}
+
+/* Delete button for User Management (Icon only) */
+.btn-delete-user {
+    background: none;
+    border: none;
+    color: var(--color-red);
+    font-size: 1.5em;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+.btn-delete-user:hover {
+    opacity: 0.8;
+}
+
+/* Final 'Remove' button in delete confirmation modal */
+/* --- Final button in delete confirmation modal --- */
+.btn-delete-final,
+.btn-logout {
+    background-color: var(--color-red); /* <--- THIS SETS THE STATIC COLOR (RED) */
+    color: var(--color-white);
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    flex: 1;
+}
+
+/* --- Count Tags (Color definitions) --- */
+.resolved-count-tag {
+    background-color: var(--color-blue-light); 
+    color: var(--color-white);
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 0.9em;
+    margin-bottom: 20px;
+}
+
+.user-count-tag {
+    background-color: var(--color-green-button-light);
+    color: var(--color-white);
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 0.9em;
+    min-width: 100px;
+    text-align: center;
+}
+
+/* --- New Dismissible Alert Styles (for displaying single notifications) --- */
+.dashboard-alert-container {
+    max-width: 600px;
+    width: 90%;
+    margin: 20px auto 0 auto; /* Center the alert below the navbar */
+}
+
+.alert {
+  padding: 15px 20px;
+  background-color: var(--color-yellow); /* Using Yellow for general notification */
+  color: var(--color-text-dark);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95em;
+}
+
+.alert.alert-rejected {
+  background-color: var(--color-red);
+  color: var(--color-white);
+}
+
+.alert.alert-approved {
+  background-color: var(--color-green-button-light);
+  color: var(--color-white);
+}
+
+.closebtn {
+  margin-left: 15px;
+  color: inherit; /* Inherit white/dark color from alert */
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.closebtn:hover {
+  color: #333; /* Darker hover color */
+}
+
+/* --- Notification Bell and Dropdown (FIXED) --- */
+
+/* Parent for the bell icon and popup */
+.notification-bell-container {
+    position: relative;
+    cursor: pointer;
+    margin-right: 15px; 
+}
+
+/* Bell Icon styling */
+.notification-bell-container .fas.fa-bell {
+    font-size: 1.3em;
+    color: var(--color-white);
+    transition: color 0.2s;
+}
+
+.notification-bell-container .fas.fa-bell:hover {
+    color: #ffd966;
+}
+
+/* Dropdown Popup container FIX: Setting correct width and position */
+.notification-dropdown {
+    position: absolute;
+    top: 45px; 
+    right: -10px; 
+    width: 300px; /* CRITICAL FIX: Give it a defined width */
+    max-height: 400px;
+    overflow-y: auto;
+    background-color: var(--color-white);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border: 1px solid #ccc;
+    z-index: 1000;
+    display: none; 
+}
+
+.notification-header {
+    /* CRITICAL FIX: Ensure the header area has correct spacing and background */
+    padding: 10px 15px;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: var(--color-text-dark);
+    border-bottom: 1px solid #eee;
+    /* FIX: Set text color/weight to match design */
+    color: #38761d;
+    font-weight: bold;
+    background-color: #EFEFEF; /* Light gray background for header to stand out */
+}
+
+.notification-item {
+    padding: 10px 15px;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.9em;
+    line-height: 1.3;
+    cursor: pointer;
+    transition: background-color 0.1s;
+    text-align: left; 
+    color: var(--color-text-dark); /* Ensure readable text color */
+}
+
+.notification-item:hover {
+    background-color: var(--color-form-bg);
+}
+
+.notification-item strong {
+    display: block;
+    font-weight: bold;
+    color: var(--color-text-dark); /* Title color */
+    margin-bottom: 5px; /* Added spacing below title */
+    font-size: 1em; /* Make the title slightly larger */
+}
+
+.notification-item p {
+    font-size: 0.85em;
+    color: #666;
+}
+
+.notification-item.rejected strong {
+    color: var(--color-red);
+}
+
+.notification-footer {
+    padding: 10px;
+    text-align: center;
+    font-size: 0.85em;
+    color: #666;
+    border-top: 1px solid #eee;
+}
+
+/* --- Add this to the end of your style.css --- */
+@media (max-width: 600px) {
+
+    /* 1. Navbar Adjustment */
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px 15px;
+        gap: 10px;
+    }
+    .user-area {
+        margin-top: 10px;
+        font-size: 1em;
+        gap: 10px;
+    }
+    .logo-area h1 { font-size: 1.3em; }
+    .logo-area h3 { font-size: 0.8em; }
+
+    /* 2. Login/Register Form Adjustments */
+    .form-wrapper {
+        margin: 20px auto;
+        padding: 20px 25px; /* Reduce padding */
+    }
+    .form-row {
+        flex-direction: column; /* Stack side-by-side inputs vertically */
+        gap: 10px;
+    }
+    
+    /* 3. Button Widths */
+    .btn-login,
+    .btn-register {
+        width: 100% !important; /* Force buttons to fill mobile width */
+    }
+
+    /* 4. Dashboard Menu Adjustment */
+    .menu-container {
+        padding: 15px;
+        box-shadow: none; /* Remove heavy shadow */
+        border: none;
+    }
+    .menu-card {
+        padding: 12px;
+    }
+    .main-content-wrapper {
+        padding-top: 15px;
+    }
+
+    /* 5. Adjust Back Link for better mobile placement */
+    .back-link {
+        position: relative !important; 
+        margin: 15px 0;
+        padding-left: 0 !important; 
+        top: auto !important;
+    }
+}
+
+/* --- Continued Mobile Styles in style.css --- */
+@media (max-width: 600px) {
+    /* ... (previous styles) ... */
+
+    /* 6. List/Card Stacking (e.g., Search Items, Admin Lists) */
+    .item-card, 
+    .activity-item-card,
+    .admin-item-card {
+        flex-direction: column; /* Stack content top-to-bottom */
+        align-items: flex-start;
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .item-info, 
+    .activity-item-info,
+    .admin-item-details {
+        flex-direction: row; /* Keep image and main text side-by-side, but allow wrap */
+        width: 100%;
+        align-items: flex-start;
+    }
+
+    .item-actions,
+    .activity-actions,
+    .admin-actions {
+        width: 100%;
+        flex-direction: column; /* Stack action buttons */
+        align-items: stretch; /* Stretch buttons to full width */
+        gap: 8px;
+        border-top: 1px solid #eee;
+        padding-top: 10px;
+    }
+    
+    .btn-view-details,
+    .btn-claim-item,
+    .btn-approve,
+    .btn-reject {
+        width: 100% !important; /* Make action buttons full width */
+        text-align: center;
+    }
+    
+    /* 7. Filter Bar Stacking */
+    .filter-bar {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    /* 8. User Management Fix (Admin) */
+    .user-management-controls {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+    }
+    .user-management-controls .search-box {
+        width: 100%;
+    }
+
+    .dashboard-grid {
+    display: flex; /* Override grid display */
+    flex-direction: column; /* Stack all cards vertically */
+    gap: 15px; /* Add spacing between stacked cards */
+    }
+
+    /* Fix 2: Remove specific grid-column spans */
+    /* This ensures old grid rules don't interfere with the new flex layout */
+    .dashboard-grid .card-link {
+        grid-column: span 8 !important; /* Force all cards to span the container width */
+        width: 100%;
+    }
+
+    .navbar {
+    flex-direction: column; 
+    align-items: flex-start;
+    padding: 10px 15px;
+    min-height: 100px; /* Ensure space for content */
+    position: relative; /* Essential for containing the absolutely positioned user-area */
+    }
+
+    .logo-area {
+        /* Stack the icon and text vertically for space saving */
+        flex-direction: column; 
+        align-items: flex-start;
+        gap: 0;
+        width: 100%;
+        margin-bottom: 5px; 
+    }
+     .logo-area .logo-text {
+    /* Force the FindMe@CCIS text block to align nicely below the pin */
+    margin-left: 0;
+    }
+
+    .logo-area h1 { font-size: 1.3em; }
+    .logo-area h3 { font-size: 0.8em; }
+
+    .user-area {
+    /* CRITICAL FIX: Anchor to the top right, separate from the main flow */
+    position: absolute; 
+    top: 15px;         /* Vertical alignment */
+    right: 15px;       /* Horizontal alignment */
+    width: auto;
+    z-index: 100;      /* Ensure clickability over other header elements */
+    justify-content: flex-end; 
+    font-size: 1em;
+    gap: 10px;
+    }
+
+   
+
+
+    /* --- Inside @media (max-width: 600px) block in style.css --- */
+
+    .notification-dropdown {
+    /* Anchors the dropdown popover correctly relative to the screen edge */
+    right: auto !important; 
+    left: -100px !important;
+    width: 250px !important; 
+    z-index: 1001; 
+    }
+
+    
+}
+
+
+
