@@ -8,7 +8,7 @@ use App\Models\Claim;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\PostStatusMail;
 use App\Mail\ClaimStatusMail;
-use App\Mail\MatchFoundMail;
+use App\Services\ItemMatchNotificationService;
 
 class AdminController extends Controller
 {
@@ -138,7 +138,7 @@ public function toBeClaimed() {
         return view('admin.user-management', compact('users', 'show_archived'));
     }
 
-    public function postAction(Request $request) {
+    public function postAction(Request $request, ItemMatchNotificationService $matchNotifications) {
     $data   = $request->json()->all();
     $id     = $data['id'] ?? null;
     $action = $data['action'] ?? null;
@@ -159,34 +159,8 @@ public function toBeClaimed() {
         );
     }
 
-    // If this is a Found item, search for matching Lost items and notify reporters
-    if ($item->item_status === 'Found') {
-        $matchingLostItems = Item::with('reporter')
-            ->where('item_status', 'Lost')
-            ->where('verification_status', 'Approved')
-            ->where(function($q) use ($item) {
-                $q->where('category_id', $item->category_id)
-                  ->orWhere('name', 'like', '%' . $item->name . '%');
-            })
-            ->where('reported_by_user_id', '!=', $item->reported_by_user_id)
-            ->get();
+    $matchNotifications->notifyMatchesForApprovedItem($item->fresh('reporter'));
 
-        foreach ($matchingLostItems as $lostItem) {
-            if ($lostItem->reporter->email) {
-                Mail::to($lostItem->reporter->email)->send(
-                    new MatchFoundMail(
-                        $lostItem->reporter->full_name,
-                        $lostItem->name,
-                        $item->name,
-                        $item->last_known_location ?? 'N/A',
-                        \Carbon\Carbon::parse($item->date_reported)->format('d-m-Y')
-                    )
-                );
-            }
-        }
-    }
-
-} elseif ($action === 'reject') {
     } elseif ($action === 'reject') {
         if (empty($reason)) {
             return response()->json(['success' => false, 'message' => 'Rejection reason required.']);
