@@ -52,12 +52,12 @@
                     <div class="admin-item-details" style="flex-direction: column; gap: 10px;">
                         <div class="item-info" style="align-items: flex-start;">
                             <div class="item-image-box">
-                                <img src="{{ $case->item->image_url ? asset($case->item->image_url) : asset('img/no-image.png') }}"
+                                <img src="{{ $case->item->primaryImageUrl() ?? asset('img/no-image.png') }}"
                                     alt="{{ $case->item->name }}">
                             </div>
                             <div class="item-details">
                                 <h4>{{ $case->item->name }}</h4>
-                                <p>{{ $case->item->category->name ?? 'N/A' }}</p>
+                                <p>{{ $case->item->displayCategory() }}</p>
                             </div>
                         </div>
                         <div style="font-size: 0.9em; padding-left: 100px;">

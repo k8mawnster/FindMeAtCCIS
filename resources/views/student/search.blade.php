@@ -50,15 +50,15 @@
                 <div class="admin-item-card">
                     <div class="admin-item-details">
                         <div class="item-image-box">
-                            @if($item->image_url)
-                                <img src="{{ asset($item->image_url) }}" alt="{{ $item->name }}">
+                            @if($item->primaryImageUrl())
+                                <img src="{{ $item->primaryImageUrl() }}" alt="{{ $item->name }}">
                             @else
                                 <img src="{{ asset('img/no-image.png') }}" alt="No Image">
                             @endif
                         </div>
                         <div class="item-details">
                             <h4>{{ $item->name }}</h4>
-                            <p>{{ $item->category->name ?? 'N/A' }}</p>
+                            <p>{{ $item->displayCategory() }}</p>
                             <p>{{ Str::limit($item->description, 60) }}</p>
                             <div class="item-meta">
                                 <span><i class="fas fa-calendar-alt"></i> {{ \Carbon\Carbon::parse($item->date_reported)->format('d-m-Y') }}</span>
@@ -72,7 +72,7 @@
                     </div>
                     <div class="admin-actions">
                         <span class="status-tag {{ $tag }}">{{ $item->item_status }}</span>
-                        <button class="btn-view-details" onclick="showItemDetails({{ $item->item_id }})">View Details</button>
+                        <a class="btn-view-details" href="{{ route('student.items.show', $item->item_id) }}" style="text-decoration: none;">View Details</a>
                         @if($item->item_status === 'Found')
                             <button class="btn-approve" onclick="showClaimModal({{ $item->item_id }}, '{{ addslashes($item->name) }}')">
                                 <i class="fas fa-hand-paper"></i> Claim
@@ -82,17 +82,6 @@
                 </div>
             @endforeach
         @endif
-    </div>
-
-    {{-- Item Details Modal --}}
-    <div id="itemDetailsModal" class="modal-backdrop" style="display:none;">
-        <div class="modal-content modal-details">
-            <div class="details-header">
-                <h3>Item Details</h3>
-                <i class="fas fa-times" style="cursor: pointer;" onclick="closeModal('itemDetailsModal')"></i>
-            </div>
-            <div id="item-details-body"></div>
-        </div>
     </div>
 
     {{-- Claim Modal --}}
@@ -134,33 +123,7 @@
 
 @section('scripts')
 <script>
-    const itemsData = @json($items->values());
-
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
-    function showItemDetails(id) {
-        const item = itemsData.find(i => i.item_id === id);
-        if (!item) return;
-        document.getElementById('item-details-body').innerHTML = `
-            <div class="details-image" style="height: auto;">
-                <img src="${item.image_url ?? '{{ asset('img/no-image.png') }}'}" style="max-height: 250px;">
-            </div>
-            <div class="details-content" style="padding-top: 15px;">
-                <h4>${item.name}</h4>
-                <div class="detail-row"><i class="fas fa-folder"></i><span>Category: ${item.category?.name ?? 'N/A'}</span></div>
-                <div class="detail-row"><i class="fas fa-calendar-alt"></i><span>Reported: ${item.date_reported}</span></div>
-                <div class="detail-row"><i class="fas fa-map-marker-alt"></i><span>Location: ${item.last_known_location}</span></div>
-                <div style="margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px;">
-                    <p style="font-weight: bold;">Description:</p>
-                    <span>${item.description}</span>
-                </div>
-                <div style="margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px;">
-                    <p style="font-weight: bold;">Reported By:</p>
-                    <span>${item.reporter?.full_name} (${item.reporter?.course?.course_code ?? 'N/A'})</span>
-                </div>
-            </div>`;
-        document.getElementById('itemDetailsModal').style.display = 'flex';
-    }
 
     function showClaimModal(id, name) {
         document.getElementById('claim_item_id').value = id;

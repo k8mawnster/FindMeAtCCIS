@@ -33,15 +33,15 @@
                 <div class="admin-item-card">
                     <div class="admin-item-details">
                         <div class="item-image-box">
-                            @if($post->image_url)
-                                <img src="{{ asset($post->image_url) }}" alt="{{ $post->name }}">
+                            @if($post->primaryImageUrl())
+                                <img src="{{ $post->primaryImageUrl() }}" alt="{{ $post->name }}">
                             @else
                                 <img src="{{ asset('img/no-image.png') }}" alt="No Image">
                             @endif
                         </div>
                         <div class="item-details">
                             <h4>{{ $post->name }}</h4>
-                            <p>{{ $post->category->name ?? 'N/A' }}</p>
+                            <p>{{ $post->displayCategory() }}</p>
                             <p>{{ Str::limit($post->description, 60) }}</p>
                             <div class="item-meta">
                                 <span><i class="fas fa-calendar-alt"></i> {{ \Carbon\Carbon::parse($post->date_reported)->format('d-m-Y') }}</span>
@@ -60,6 +60,9 @@
                             {{ $post->verification_status }}
                         </span>
                         @if($post->verification_status === 'Pending')
+                            <a class="btn-view-details" href="{{ route('student.reports.edit', $post->item_id) }}" style="text-decoration: none;">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
                             <button class="btn-reject"
                                 onclick="cancelPost({{ $post->item_id }}, '{{ $post->name }}')">
                                 <i class="fas fa-times"></i> Cancel
@@ -79,16 +82,28 @@
                 <div class="admin-item-card">
                     <div class="admin-item-details">
                         <div class="item-image-box">
-                            @if($claim->item->image_url)
-                                <img src="{{ asset($claim->item->image_url) }}" alt="{{ $claim->item->name }}">
+                            @if($claim->item->primaryImageUrl())
+                                <img src="{{ $claim->item->primaryImageUrl() }}" alt="{{ $claim->item->name }}">
                             @else
                                 <img src="{{ asset('img/no-image.png') }}" alt="No Image">
                             @endif
                         </div>
                         <div class="item-details">
                             <h4>{{ $claim->item->name }}</h4>
-                            <p>{{ $claim->item->category->name ?? 'N/A' }}</p>
+                            <p>{{ $claim->item->displayCategory() }}</p>
                             <p>Claimed on: {{ \Carbon\Carbon::parse($claim->claim_date)->format('d-m-Y') }}</p>
+                            @if($claim->claim_status === 'Verified')
+                                <div class="pickup-summary">
+                                    <strong>Pickup:</strong>
+                                    {{ $claim->pickup_schedule ? \Carbon\Carbon::parse($claim->pickup_schedule)->format('M j, Y g:i A') : 'Schedule pending' }}
+                                    @if($claim->pickup_location)
+                                        <br>{{ $claim->pickup_location }}
+                                    @endif
+                                    @if($claim->pickup_notes)
+                                        <br>{{ $claim->pickup_notes }}
+                                    @endif
+                                </div>
+                            @endif
                         </div>
                     </div>
                     <div class="admin-actions">

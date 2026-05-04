@@ -26,6 +26,19 @@
             </p>
             @if(strtolower($status) === 'verified')
                 <p>Please visit the CCIS Lost and Found office to pick up your item. Bring a valid ID.</p>
+                @if($pickupSchedule || $pickupLocation || $pickupNotes)
+                    <div style="background: #f4fbf6; border-left: 4px solid #2c7a4b; padding: 12px; margin: 15px 0;">
+                        @if($pickupSchedule)
+                            <p style="margin: 0 0 8px;"><strong>Pickup Schedule:</strong> {{ \Carbon\Carbon::parse($pickupSchedule)->format('F j, Y g:i A') }}</p>
+                        @endif
+                        @if($pickupLocation)
+                            <p style="margin: 0 0 8px;"><strong>Pickup Location:</strong> {{ $pickupLocation }}</p>
+                        @endif
+                        @if($pickupNotes)
+                            <p style="margin: 0;"><strong>Notes:</strong> {{ $pickupNotes }}</p>
+                        @endif
+                    </div>
+                @endif
             @elseif(strtolower($status) === 'resolved')
                 <p>Your item has been successfully claimed. Thank you for using FindMe@CCIS!</p>
             @else

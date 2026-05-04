@@ -34,14 +34,18 @@
             </div>
             <div class="form-group">
                 <label>Category</label>
-                <select name="category_id" required>
+                <select name="category_id" id="category-select" required>
                     <option value="" disabled selected>Select Category</option>
                     @foreach($categories as $cat)
-                        <option value="{{ $cat->category_id }}" {{ old('category_id') == $cat->category_id ? 'selected' : '' }}>
+                        <option value="{{ $cat->category_id }}" data-name="{{ $cat->name }}" {{ old('category_id') == $cat->category_id ? 'selected' : '' }}>
                             {{ $cat->name }}
                         </option>
                     @endforeach
                 </select>
+            </div>
+            <div class="form-group" id="custom-category-group" style="display: none;">
+                <label>Specify Category</label>
+                <input type="text" name="custom_category" id="custom-category-input" maxlength="80" value="{{ old('custom_category') }}" placeholder="e.g. Umbrella, Calculator">
             </div>
             <div class="form-group">
                 <label>Description</label>
@@ -49,7 +53,7 @@
             </div>
             <div class="form-group">
                 <label>Last Known Location</label>
-                <input type="text" name="location" id="location-input" required value="{{ old('location') }}" placeholder="Click the map or type here">
+                <input type="text" name="location" id="location-input" required value="{{ old('location') }}" placeholder="e.g. CCIS, Library, Canteen">
             </div>
 
             <div class="form-group">
@@ -60,8 +64,8 @@
             </div>
 
             <div class="form-group">
-                <label>Upload Image (optional)</label>
-                <input type="file" name="image" accept="image/*">
+                <label>Upload Images (optional)</label>
+                <input type="file" name="images[]" accept="image/*" multiple>
             </div>
 
             <button type="submit" class="btn btn-login" style="color: white;">SUBMIT REPORT</button>
@@ -78,6 +82,20 @@
     }).addTo(map);
 
     let marker = null;
+    const categorySelect = document.getElementById('category-select');
+    const customCategoryGroup = document.getElementById('custom-category-group');
+    const customCategoryInput = document.getElementById('custom-category-input');
+
+    function toggleCustomCategory() {
+        const selected = categorySelect.options[categorySelect.selectedIndex];
+        const isOther = selected?.dataset.name?.toLowerCase() === 'other';
+        customCategoryGroup.style.display = isOther ? 'block' : 'none';
+        customCategoryInput.required = isOther;
+        if (!isOther) customCategoryInput.value = '';
+    }
+
+    categorySelect.addEventListener('change', toggleCustomCategory);
+    toggleCustomCategory();
 
     map.on('click', function(e) {
         const { lat, lng } = e.latlng;
@@ -85,7 +103,6 @@
         else marker = L.marker(e.latlng).addTo(map);
         document.getElementById('latitude').value = lat;
         document.getElementById('longitude').value = lng;
-        document.getElementById('location-input').value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
     });
 </script>
 @endsection

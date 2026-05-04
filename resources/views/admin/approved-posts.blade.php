@@ -28,11 +28,11 @@
                 <div class="admin-item-card">
                     <div class="admin-item-details">
                         <div class="item-image-box">
-                            <img src="{{ $post->image_url ? asset($post->image_url) : asset('img/no-image.png') }}" alt="{{ $post->name }}">
+                            <img src="{{ $post->primaryImageUrl() ?? asset('img/no-image.png') }}" alt="{{ $post->name }}">
                         </div>
                         <div class="item-details">
                             <h4>{{ $post->name }}</h4>
-                            <p>{{ $post->category->name ?? 'N/A' }}</p>
+                            <p>{{ $post->displayCategory() }}</p>
                             <p>{{ Str::limit($post->description, 60) }}</p>
                             <div class="item-meta">
                                 <span><i class="fas fa-calendar-alt"></i> {{ \Carbon\Carbon::parse($post->date_reported)->format('d-m-Y') }}</span>
@@ -73,7 +73,7 @@
         if (!post) return;
         document.getElementById('details-body').innerHTML = `
             <div class="details-image" style="height: auto;">
-                <img src="${post.image_url ?? '{{ asset('img/no-image.png') }}'}" style="max-height: 250px;">
+                <img src="${post.photos?.[0]?.image_url ?? post.image_url ?? '{{ asset('img/no-image.png') }}'}" style="max-height: 250px;">
             </div>
             <div class="details-content" style="padding-top: 15px;">
                 <h4>${post.name}</h4>

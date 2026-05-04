@@ -27,18 +27,26 @@
         @else
             @foreach($posts as $post)
                 <div class="admin-item-card">
+                    @php $verifiedClaim = $post->claims->firstWhere('claim_status', 'Verified'); @endphp
                     <div class="admin-item-details">
                         <div class="item-image-box">
-                            <img src="{{ $post->image_url ? asset($post->image_url) : asset('img/no-image.png') }}" alt="{{ $post->name }}">
+                            <img src="{{ $post->primaryImageUrl() ?? asset('img/no-image.png') }}" alt="{{ $post->name }}">
                         </div>
                         <div class="item-details">
                             <h4>{{ $post->name }}</h4>
-                            <p>{{ $post->category->name ?? 'N/A' }}</p>
+                            <p>{{ $post->displayCategory() }}</p>
                             <p>{{ Str::limit($post->description, 60) }}</p>
                             <div class="item-meta">
                                 <span><i class="fas fa-calendar-alt"></i> {{ \Carbon\Carbon::parse($post->date_reported)->format('d-m-Y') }}</span>
                                 <span><i class="fas fa-map-marker-alt"></i> {{ $post->last_known_location }}</span>
                             </div>
+                            @if($verifiedClaim)
+                                <div class="pickup-summary">
+                                    <strong>Pickup:</strong>
+                                    {{ $verifiedClaim->pickup_schedule ? \Carbon\Carbon::parse($verifiedClaim->pickup_schedule)->format('M j, Y g:i A') : 'Schedule pending' }}
+                                    @if($verifiedClaim->pickup_location)<br>{{ $verifiedClaim->pickup_location }}@endif
+                                </div>
+                            @endif
                         </div>
                     </div>
                     <div class="admin-actions">
@@ -73,7 +81,7 @@
         if (!post) return;
         document.getElementById('details-body').innerHTML = `
             <div class="details-image" style="height: auto;">
-                <img src="${post.image_url ?? '{{ asset('img/no-image.png') }}'}" style="max-height: 250px;">
+                <img src="${post.photos?.[0]?.image_url ?? post.image_url ?? '{{ asset('img/no-image.png') }}'}" style="max-height: 250px;">
             </div>
             <div class="details-content" style="padding-top: 15px;">
                 <h4>${post.name}</h4>

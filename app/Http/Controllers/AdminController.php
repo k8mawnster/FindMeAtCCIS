@@ -26,7 +26,7 @@ class AdminController extends Controller
     }
 
     public function pendingPosts() {
-        $posts = Item::with(['reporter.course', 'category'])
+        $posts = Item::with(['reporter.course', 'category', 'photos'])
             ->where('verification_status', 'Pending')
             ->orderBy('date_reported', 'asc')
             ->get();
@@ -34,7 +34,7 @@ class AdminController extends Controller
     }
 
     public function approvedPosts() {
-        $posts = Item::with(['reporter.course', 'category'])
+        $posts = Item::with(['reporter.course', 'category', 'photos'])
             ->where('verification_status', 'Approved')
             ->orderBy('date_reported', 'desc')
             ->get();
@@ -42,7 +42,7 @@ class AdminController extends Controller
     }
 
     public function rejectedPosts() {
-        $posts = Item::with(['reporter.course', 'category'])
+        $posts = Item::with(['reporter.course', 'category', 'photos'])
             ->where('verification_status', 'Rejected')
             ->orderBy('date_reported', 'desc')
             ->get();
@@ -50,7 +50,7 @@ class AdminController extends Controller
     }
 
 public function claimForms() {
-    $claims = Claim::with(['item.category', 'claimedBy.course'])
+    $claims = Claim::with(['item.category', 'item.photos', 'claimedBy.course'])
         ->whereIn('claim_status', ['Pending', 'Verified'])
         ->orderBy('claim_date', 'asc')
         ->get();
@@ -58,7 +58,7 @@ public function claimForms() {
 }
 
 public function toBeClaimed() {
-    $posts = Item::with(['reporter.course', 'category'])
+    $posts = Item::with(['reporter.course', 'category', 'photos', 'claims.claimedBy.course'])
         ->where('verification_status', 'Approved')
         ->where('item_status', 'Found')
         ->whereHas('claims', function($q) {
@@ -70,7 +70,7 @@ public function toBeClaimed() {
 }
 
     public function resolvedCases(Request $request) {
-        $query = Claim::with(['item.category', 'claimedBy.course'])
+        $query = Claim::with(['item.category', 'item.photos', 'claimedBy.course'])
             ->where('claim_status', 'Resolved');
 
         $filter_period = $request->get('period', '');
@@ -112,7 +112,7 @@ public function toBeClaimed() {
                 fputcsv($file, [
                     $c->claim_id,
                     $c->item->name,
-                    $c->item->category->name ?? 'N/A',
+                    $c->item->displayCategory(),
                     $c->claimer_full_name,
                     $c->claimedBy->course->course_code ?? 'N/A',
                     $c->claimedBy->section_name ?? 'N/A',
@@ -214,11 +214,29 @@ public function toBeClaimed() {
     }
 
     if ($action === 'set_pickup') {
-        $claim->update(['claim_status' => 'Verified']);
+        $request->validate([
+            'pickup_schedule' => 'required|date',
+            'pickup_location' => 'required|string|max:255',
+            'pickup_notes'    => 'nullable|string',
+        ]);
+
+        $claim->update([
+            'claim_status' => 'Verified',
+            'pickup_schedule' => isset($data['pickup_schedule']) ? str_replace('T', ' ', $data['pickup_schedule']) : null,
+            'pickup_location' => $data['pickup_location'] ?? null,
+            'pickup_notes' => $data['pickup_notes'] ?? null,
+        ]);
         // Send email
         if ($claim->claimedBy->email) {
             Mail::to($claim->claimedBy->email)->send(
-                new ClaimStatusMail($claim->claimedBy->full_name, $claim->item->name, 'Verified')
+                new ClaimStatusMail(
+                    $claim->claimedBy->full_name,
+                    $claim->item->name,
+                    'Verified',
+                    $claim->pickup_schedule,
+                    $claim->pickup_location,
+                    $claim->pickup_notes
+                )
             );
         }
     } elseif ($action === 'reject') {
@@ -264,4 +282,5 @@ public function toBeClaimed() {
 
         return response()->json(['success' => false, 'message' => 'User not found or already archived.']);
     }
+
 }

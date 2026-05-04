@@ -2,12 +2,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Item;
 use App\Models\Claim;
 use App\Models\Category;
 use App\Models\Course;
+use App\Models\ItemPhoto;
 
 class StudentController extends Controller
 {
@@ -43,25 +43,26 @@ class StudentController extends Controller
             'latitude'    => 'nullable|numeric',
             'longitude'   => 'nullable|numeric',
             'image'       => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
+            'images.*'    => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
+            'custom_category' => 'nullable|string|max:80',
         ]);
+        $customCategory = $this->validatedCustomCategory($request);
 
-        $image_url = null;
-        if ($request->hasFile('image')) {
-            $image_url = $request->file('image')->store('uploads/items', 'public');
-        }
-
-        Item::create([
+        $item = Item::create([
             'name'                 => $request->name,
             'category_id'         => $request->category_id,
+            'custom_category'     => $customCategory,
             'description'         => $request->description,
             'last_known_location' => $request->location,
             'latitude'            => $request->latitude,
             'longitude'           => $request->longitude,
-            'image_url' => $image_url ? asset('storage/' . $image_url) : null,
+            'image_url'            => null,
             'item_status'         => 'Lost',
             'verification_status' => 'Pending',
             'reported_by_user_id' => session('user_id'),
         ]);
+
+        $this->storeItemPhotos($request, $item);
 
         return redirect()->route('student.activity')->with('success', 'Lost item reported successfully!');
     }
@@ -80,35 +81,39 @@ class StudentController extends Controller
             'latitude'    => 'nullable|numeric',
             'longitude'   => 'nullable|numeric',
             'image'       => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
+            'images.*'    => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
+            'custom_category' => 'nullable|string|max:80',
         ]);
+        $customCategory = $this->validatedCustomCategory($request);
 
-        $image_url = null;
-        if ($request->hasFile('image')) {
-            $image_url = $request->file('image')->store('uploads/items', 'public');
-        }
-
-        Item::create([
+        $item = Item::create([
             'name'                 => $request->name,
             'category_id'         => $request->category_id,
+            'custom_category'     => $customCategory,
             'description'         => $request->description,
             'last_known_location' => $request->location,
             'latitude'            => $request->latitude,
             'longitude'           => $request->longitude,
-            'image_url' => $image_url ? asset('storage/' . $image_url) : null,
+            'image_url'            => null,
             'item_status'         => 'Found',
             'verification_status' => 'Pending',
             'reported_by_user_id' => session('user_id'),
         ]);
 
+        $this->storeItemPhotos($request, $item);
+
         return redirect()->route('student.activity')->with('success', 'Found item reported successfully!');
     }
 
     public function search(Request $request) {
-        $query = Item::with(['category', 'reporter.course'])
+        $query = Item::with(['category', 'reporter.course', 'photos'])
             ->where('verification_status', 'Approved');
 
         if ($request->filled('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
+                    ->orWhere('custom_category', 'like', '%' . $request->search . '%');
+            });
         }
         if ($request->filled('category')) {
             $query->where('category_id', $request->category);
@@ -123,19 +128,74 @@ class StudentController extends Controller
         return view('student.search', compact('items', 'categories'));
     }
 
+    public function showItem($id) {
+        $item = Item::with(['category', 'reporter.course', 'photos'])
+            ->where('verification_status', 'Approved')
+            ->findOrFail($id);
+
+        $similarItems = $this->possibleMatchesFor($item)
+            ->with(['category', 'photos'])
+            ->take(6)
+            ->get();
+
+        return view('student.item-detail', compact('item', 'similarItems'));
+    }
+
     public function myActivity() {
         $user_id = session('user_id');
-        $posts = Item::with('category')
+        $posts = Item::with(['category', 'photos'])
             ->where('reported_by_user_id', $user_id)
             ->orderBy('date_reported', 'desc')
             ->get();
 
-        $claims = Claim::with('item.category')
+        $claims = Claim::with('item.category', 'item.photos')
             ->where('claimed_by_user_id', $user_id)
             ->orderBy('claim_date', 'desc')
             ->get();
 
         return view('student.my-activity', compact('posts', 'claims'));
+    }
+
+    public function editReport($id) {
+        $item = Item::with(['category', 'photos'])
+            ->where('reported_by_user_id', session('user_id'))
+            ->where('verification_status', 'Pending')
+            ->findOrFail($id);
+
+        $categories = Category::orderBy('name')->get();
+        return view('student.edit-report', compact('item', 'categories'));
+    }
+
+    public function updateReport(Request $request, $id) {
+        $item = Item::where('reported_by_user_id', session('user_id'))
+            ->where('verification_status', 'Pending')
+            ->findOrFail($id);
+
+        $request->validate([
+            'name'        => 'required|string|max:100',
+            'category_id' => 'required|exists:categories,category_id',
+            'description' => 'required|string',
+            'location'    => 'required|string|max:255',
+            'latitude'    => 'nullable|numeric',
+            'longitude'   => 'nullable|numeric',
+            'images.*'    => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
+            'custom_category' => 'nullable|string|max:80',
+        ]);
+        $customCategory = $this->validatedCustomCategory($request);
+
+        $item->update([
+            'name'                 => $request->name,
+            'category_id'          => $request->category_id,
+            'custom_category'      => $customCategory,
+            'description'          => $request->description,
+            'last_known_location'  => $request->location,
+            'latitude'             => $request->latitude,
+            'longitude'            => $request->longitude,
+        ]);
+
+        $this->storeItemPhotos($request, $item);
+
+        return redirect()->route('student.activity')->with('success', 'Report updated successfully.');
     }
 
     public function settings() {
@@ -167,19 +227,6 @@ class StudentController extends Controller
 
         return response()->json(['success' => true]);
     }
-
-public function updatePassword(Request $request) {
-    $request->validate([
-        'password' => 'required|min:6',
-    ]);
-
-    User::where('user_id', session('user_id'))
-        ->update(['password_hash' => Hash::make($request->password)]);
-
-    session()->flush();
-
-    return response()->json(['success' => true, 'redirect' => route('login')]);
-}
 
     public function notifications() {
         $user_id = session('user_id');
@@ -269,5 +316,65 @@ public function updatePassword(Request $request) {
 
     public function updateProfile(Request $request) {
         return $this->updateSettings($request);
+    }
+
+    private function storeItemPhotos(Request $request, Item $item): void {
+        $files = [];
+        if ($request->hasFile('images')) {
+            $files = $request->file('images');
+        } elseif ($request->hasFile('image')) {
+            $files = [$request->file('image')];
+        }
+
+        foreach ($files as $file) {
+            if (!$file) {
+                continue;
+            }
+
+            $path = $file->store('uploads/items', 'public');
+            $url = asset('storage/' . $path);
+
+            ItemPhoto::create([
+                'item_id' => $item->item_id,
+                'image_url' => $url,
+            ]);
+
+            if (!$item->image_url) {
+                $item->update(['image_url' => $url]);
+            }
+        }
+    }
+
+    private function validatedCustomCategory(Request $request): ?string {
+        $category = Category::find($request->category_id);
+        if (strcasecmp($category->name ?? '', 'Other') !== 0) {
+            return null;
+        }
+
+        $request->validate([
+            'custom_category' => 'required|string|max:80',
+        ]);
+
+        return trim($request->custom_category);
+    }
+
+    private function possibleMatchesFor(Item $item) {
+        $oppositeStatus = $item->item_status === 'Found' ? 'Lost' : 'Found';
+
+        return Item::where('verification_status', 'Approved')
+            ->where('item_status', $oppositeStatus)
+            ->where('item_id', '!=', $item->item_id)
+            ->where('reported_by_user_id', '!=', $item->reported_by_user_id)
+            ->where(function ($query) use ($item) {
+                $query->where('category_id', $item->category_id)
+                    ->orWhere('name', 'like', '%' . $item->name . '%')
+                    ->orWhereRaw('? LIKE CONCAT("%", name, "%")', [$item->name]);
+
+                if ($item->custom_category) {
+                    $query->orWhere('custom_category', 'like', '%' . $item->custom_category . '%');
+                }
+            })
+            ->orderByRaw('category_id = ? desc', [$item->category_id])
+            ->orderBy('date_reported', 'desc');
     }
 }

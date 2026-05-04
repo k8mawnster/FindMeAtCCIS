@@ -14,12 +14,25 @@ class ClaimStatusMail extends Mailable
     public string $studentName;
     public string $itemName;
     public string $status;
+    public ?string $pickupSchedule;
+    public ?string $pickupLocation;
+    public ?string $pickupNotes;
 
-    public function __construct(string $studentName, string $itemName, string $status)
+    public function __construct(
+        string $studentName,
+        string $itemName,
+        string $status,
+        ?string $pickupSchedule = null,
+        ?string $pickupLocation = null,
+        ?string $pickupNotes = null
+    )
     {
         $this->studentName = $studentName;
         $this->itemName    = $itemName;
         $this->status      = $status;
+        $this->pickupSchedule = $pickupSchedule;
+        $this->pickupLocation = $pickupLocation;
+        $this->pickupNotes = $pickupNotes;
     }
 
     public function envelope(): Envelope

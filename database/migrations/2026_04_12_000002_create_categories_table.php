@@ -13,11 +13,10 @@ return new class extends Migration {
         DB::table('categories')->insert([
             ['name' => 'ID Cards'],
             ['name' => 'Wallets'],
-            ['name' => 'Phones'],
+            ['name' => 'Electronics'],
             ['name' => 'Books'],
             ['name' => 'Keys'],
             ['name' => 'Clothing'],
-            ['name' => 'Gadgets'],
             ['name' => 'Other'],
         ]);
     }

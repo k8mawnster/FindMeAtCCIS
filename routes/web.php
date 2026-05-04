@@ -27,10 +27,12 @@ Route::middleware(['student', 'archived'])->prefix('student')->group(function ()
     Route::get('/report-found', [StudentController::class, 'reportFound'])->name('student.report.found');
     Route::post('/report-found', [StudentController::class, 'storeReportFound'])->name('student.report.found.post');
     Route::get('/search', [StudentController::class, 'search'])->name('student.search');
+    Route::get('/items/{id}', [StudentController::class, 'showItem'])->name('student.items.show');
     Route::get('/my-activity', [StudentController::class, 'myActivity'])->name('student.activity');
+    Route::get('/reports/{id}/edit', [StudentController::class, 'editReport'])->name('student.reports.edit');
+    Route::put('/reports/{id}', [StudentController::class, 'updateReport'])->name('student.reports.update');
     Route::get('/settings', [StudentController::class, 'settings'])->name('student.settings');
     Route::put('/settings', [StudentController::class, 'updateSettings'])->name('student.settings.update');
-    Route::put('/settings/password', [StudentController::class, 'updatePassword'])->name('student.settings.password');
 });
 
 // --- Admin Routes ---
