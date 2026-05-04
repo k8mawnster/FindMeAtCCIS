@@ -6,6 +6,7 @@ use App\Models\Item;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Throwable;
 
 class ItemMatchNotificationService
 {
@@ -57,8 +58,9 @@ class ItemMatchNotificationService
                 return;
             }
 
-            $this->sendMatchEmail($lostItem, $foundItem);
-            $sent++;
+            if ($this->sendMatchEmail($lostItem, $foundItem)) {
+                $sent++;
+            }
         });
 
         return $sent;
@@ -84,8 +86,9 @@ class ItemMatchNotificationService
         ]);
 
         $matchingFoundItems->each(function (Item $foundItem) use ($lostItem, &$sent) {
-            $this->sendMatchEmail($lostItem, $foundItem);
-            $sent++;
+            if ($this->sendMatchEmail($lostItem, $foundItem)) {
+                $sent++;
+            }
         });
 
         return $sent;
@@ -98,12 +101,9 @@ class ItemMatchNotificationService
             ->where('verification_status', 'Approved')
             ->where('item_id', '!=', $foundItem->item_id)
             ->where('reported_by_user_id', '!=', $foundItem->reported_by_user_id)
-            ->where(function ($query) use ($foundItem) {
-                $query->where('category_id', $foundItem->category_id)
-                    ->orWhere('name', 'like', '%' . $foundItem->name . '%')
-                    ->orWhereRaw('? LIKE CONCAT("%", name, "%")', [$foundItem->name]);
-            })
-            ->get();
+            ->get()
+            ->filter(fn(Item $lostItem) => $this->itemsArePossibleMatch($lostItem, $foundItem))
+            ->values();
     }
 
     private function matchingFoundItems(Item $lostItem)
@@ -112,15 +112,47 @@ class ItemMatchNotificationService
             ->where('verification_status', 'Approved')
             ->where('item_id', '!=', $lostItem->item_id)
             ->where('reported_by_user_id', '!=', $lostItem->reported_by_user_id)
-            ->where(function ($query) use ($lostItem) {
-                $query->where('category_id', $lostItem->category_id)
-                    ->orWhere('name', 'like', '%' . $lostItem->name . '%')
-                    ->orWhereRaw('? LIKE CONCAT("%", name, "%")', [$lostItem->name]);
-            })
-            ->get();
+            ->get()
+            ->filter(fn(Item $foundItem) => $this->itemsArePossibleMatch($lostItem, $foundItem))
+            ->values();
     }
 
-    private function sendMatchEmail(Item $lostItem, Item $foundItem): void
+    private function itemsArePossibleMatch(Item $lostItem, Item $foundItem): bool
+    {
+        $sameCategory = $lostItem->category_id === $foundItem->category_id;
+        $nameMatch = $this->nameMatchStrength($lostItem->name, $foundItem->name);
+
+        return $nameMatch === 'strong'
+            || ($sameCategory && $nameMatch === 'partial');
+    }
+
+    private function nameMatchStrength(string $firstName, string $secondName): ?string
+    {
+        $first = $this->normalizedWords($firstName);
+        $second = $this->normalizedWords($secondName);
+
+        if ($first === '' || $second === '') {
+            return null;
+        }
+
+        if ($first === $second || str_contains($first, $second) || str_contains($second, $first)) {
+            return 'strong';
+        }
+
+        return count(array_intersect(explode(' ', $first), explode(' ', $second))) > 0
+            ? 'partial'
+            : null;
+    }
+
+    private function normalizedWords(string $name): string
+    {
+        $name = strtolower($name);
+        $name = preg_replace('/[^a-z0-9]+/', ' ', $name) ?? '';
+
+        return trim(preg_replace('/\s+/', ' ', $name) ?? '');
+    }
+
+    private function sendMatchEmail(Item $lostItem, Item $foundItem): bool
     {
         Log::info('Possible item match notification found.', [
             'lost_item_id' => $lostItem->item_id,
@@ -130,14 +162,22 @@ class ItemMatchNotificationService
             'recipient_email' => $lostItem->reporter->email,
         ]);
 
-        Mail::to($lostItem->reporter->email)->send(
-            new MatchFoundMail(
-                $lostItem->reporter->full_name,
-                $lostItem->name,
-                $foundItem->name,
-                $foundItem->last_known_location ?? 'N/A',
-                Carbon::parse($foundItem->date_reported)->format('d-m-Y')
-            )
-        );
+        try {
+            Mail::to($lostItem->reporter->email)->send(
+                new MatchFoundMail(
+                    $lostItem->reporter->full_name,
+                    $lostItem->name,
+                    $foundItem->name,
+                    $foundItem->last_known_location ?? 'N/A',
+                    Carbon::parse($foundItem->date_reported)->format('d-m-Y')
+                )
+            );
+
+            return true;
+        } catch (Throwable $exception) {
+            report($exception);
+
+            return false;
+        }
     }
 }

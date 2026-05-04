@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\PostStatusMail;
 use App\Mail\ClaimStatusMail;
 use App\Services\ItemMatchNotificationService;
+use Throwable;
 
 class AdminController extends Controller
 {
@@ -152,12 +153,11 @@ public function toBeClaimed() {
     if ($action === 'approve') {
     $item->update(['verification_status' => 'Approved', 'rejection_reason' => null]);
 
-    // Send email to reporter
-    if ($item->reporter->email) {
-        Mail::to($item->reporter->email)->send(
-            new PostStatusMail($item->reporter->full_name, $item->name, 'Approved')
-        );
-    }
+    $this->sendMailSafely(
+        $item->reporter->email ?? null,
+        new PostStatusMail($item->reporter->full_name, $item->name, 'Approved'),
+        'post approval notification'
+    );
 
     $matchNotifications->notifyMatchesForApprovedItem($item->fresh('reporter'));
 
@@ -166,12 +166,11 @@ public function toBeClaimed() {
             return response()->json(['success' => false, 'message' => 'Rejection reason required.']);
         }
         $item->update(['verification_status' => 'Rejected', 'rejection_reason' => $reason]);
-        // Send email
-        if ($item->reporter->email) {
-            Mail::to($item->reporter->email)->send(
-                new PostStatusMail($item->reporter->full_name, $item->name, 'Rejected', $reason)
-            );
-        }
+        $this->sendMailSafely(
+            $item->reporter->email ?? null,
+            new PostStatusMail($item->reporter->full_name, $item->name, 'Rejected', $reason),
+            'post rejection notification'
+        );
     } elseif ($action === 'restore') {
         $item->update(['verification_status' => 'Pending', 'rejection_reason' => null]);
     } else {
@@ -198,12 +197,11 @@ public function toBeClaimed() {
 
         $claim->update(['claim_status' => 'Resolved']);
 
-        // Send email
-        if ($claim->claimedBy->email) {
-            Mail::to($claim->claimedBy->email)->send(
-                new ClaimStatusMail($claim->claimedBy->full_name, $claim->item->name, 'Resolved')
-            );
-        }
+        $this->sendMailSafely(
+            $claim->claimedBy->email ?? null,
+            new ClaimStatusMail($claim->claimedBy->full_name, $claim->item->name, 'Resolved'),
+            'claim resolved notification'
+        );
 
         return response()->json(['success' => true, 'message' => 'Item resolved successfully.']);
     }
@@ -226,35 +224,32 @@ public function toBeClaimed() {
             'pickup_location' => $data['pickup_location'] ?? null,
             'pickup_notes' => $data['pickup_notes'] ?? null,
         ]);
-        // Send email
-        if ($claim->claimedBy->email) {
-            Mail::to($claim->claimedBy->email)->send(
-                new ClaimStatusMail(
-                    $claim->claimedBy->full_name,
-                    $claim->item->name,
-                    'Verified',
-                    $claim->pickup_schedule,
-                    $claim->pickup_location,
-                    $claim->pickup_notes
-                )
-            );
-        }
+        $this->sendMailSafely(
+            $claim->claimedBy->email ?? null,
+            new ClaimStatusMail(
+                $claim->claimedBy->full_name,
+                $claim->item->name,
+                'Verified',
+                $claim->pickup_schedule,
+                $claim->pickup_location,
+                $claim->pickup_notes
+            ),
+            'claim verified notification'
+        );
     } elseif ($action === 'reject') {
         $claim->update(['claim_status' => 'Rejected']);
-        // Send email
-        if ($claim->claimedBy->email) {
-            Mail::to($claim->claimedBy->email)->send(
-                new ClaimStatusMail($claim->claimedBy->full_name, $claim->item->name, 'Rejected')
-            );
-        }
+        $this->sendMailSafely(
+            $claim->claimedBy->email ?? null,
+            new ClaimStatusMail($claim->claimedBy->full_name, $claim->item->name, 'Rejected'),
+            'claim rejection notification'
+        );
     } elseif ($action === 'resolve') {
         $claim->update(['claim_status' => 'Resolved']);
-        // Send email
-        if ($claim->claimedBy->email) {
-            Mail::to($claim->claimedBy->email)->send(
-                new ClaimStatusMail($claim->claimedBy->full_name, $claim->item->name, 'Resolved')
-            );
-        }
+        $this->sendMailSafely(
+            $claim->claimedBy->email ?? null,
+            new ClaimStatusMail($claim->claimedBy->full_name, $claim->item->name, 'Resolved'),
+            'claim resolved notification'
+        );
     } else {
         return response()->json(['success' => false, 'message' => 'Invalid action.']);
     }
@@ -281,6 +276,18 @@ public function toBeClaimed() {
         }
 
         return response()->json(['success' => false, 'message' => 'User not found or already archived.']);
+    }
+
+    private function sendMailSafely(?string $recipient, $mail, string $context): void {
+        if (!$recipient) {
+            return;
+        }
+
+        try {
+            Mail::to($recipient)->send($mail);
+        } catch (Throwable $exception) {
+            report($exception);
+        }
     }
 
 }
