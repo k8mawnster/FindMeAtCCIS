@@ -19,6 +19,8 @@
     --color-form-bg: #f9f9f9;
     --color-shadow: rgba(0, 0, 0, 0.1);
     --color-red: #cc0000;
+    --color-blue-light: #1f6fb2;
+    --color-blue-dark: #164f80;
 }
 
 * {
@@ -1459,6 +1461,17 @@ textarea:focus {
     padding: 8px 15px;
     border-radius: 20px;
     font-size: 0.9em;
+}
+
+.btn-download-csv {
+    background-color: var(--color-blue-dark);
+    color: var(--color-white);
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.btn-download-csv:hover {
+    background-color: var(--color-blue-light);
 }
 
 .btn-reject {

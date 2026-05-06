@@ -32,8 +32,8 @@
                     <i class="fas fa-filter"></i> Apply Filter
                 </button>
             </div>
-            <button type="button" class="btn-approve"
-                style="padding: 8px 15px; background-color: var(--color-blue-dark);"
+            <button type="button" class="btn-approve btn-download-csv"
+                style="padding: 8px 15px;"
                 onclick="triggerDownload()">
                 <i class="fas fa-download"></i> Download CSV
             </button>
