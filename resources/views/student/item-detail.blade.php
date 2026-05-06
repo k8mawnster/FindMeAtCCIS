@@ -17,6 +17,7 @@
             $photos = collect([$item->image_url]);
         }
         $tag = strtolower($item->item_status) === 'lost' ? 'tag-lost' : 'tag-found';
+        $canClaim = $item->item_status === 'Found' && (int) $item->reported_by_user_id !== (int) session('user_id');
     @endphp
 
     <div class="admin-list-container">
@@ -47,8 +48,8 @@
                 <div class="detail-desc">{{ $item->description }}</div>
                 <div class="detail-row"><i class="fas fa-user"></i><span>{{ $item->reporter->full_name }} ({{ $item->reporter->course->course_code ?? 'N/A' }})</span></div>
 
-                @if($item->item_status === 'Found')
-                    <button class="btn-approve" onclick="showClaimModal({{ $item->item_id }}, '{{ addslashes($item->name) }}')" style="margin-top: 18px;">
+                @if($canClaim)
+                    <button class="btn-approve" onclick="showClaimModal({{ $item->item_id }}, @js($item->name))" style="margin-top: 18px;">
                         <i class="fas fa-hand-paper"></i> Claim Item
                     </button>
                 @endif

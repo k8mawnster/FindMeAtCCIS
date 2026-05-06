@@ -76,18 +76,18 @@
                 <img src="${post.photos?.[0]?.image_url ?? post.image_url ?? '{{ asset('img/no-image.png') }}'}" style="max-height: 250px;">
             </div>
             <div class="details-content" style="padding-top: 15px;">
-                <h4>${post.name}</h4>
-                <div class="detail-row"><i class="fas fa-folder"></i><span>Category: ${post.category?.name ?? 'N/A'}</span></div>
-                <div class="detail-row"><i class="fas fa-calendar-alt"></i><span>Reported: ${post.date_reported}</span></div>
-                <div class="detail-row"><i class="fas fa-map-marker-alt"></i><span>Location: ${post.last_known_location}</span></div>
+                <h4>${escapeHtml(post.name)}</h4>
+                <div class="detail-row"><i class="fas fa-folder"></i><span>Category: ${escapeHtml(post.category?.name ?? 'N/A')}</span></div>
+                <div class="detail-row"><i class="fas fa-calendar-alt"></i><span>Reported: ${escapeHtml(post.date_reported)}</span></div>
+                <div class="detail-row"><i class="fas fa-map-marker-alt"></i><span>Location: ${escapeHtml(post.last_known_location)}</span></div>
                 <div style="margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px;">
-                    <p style="font-weight: bold;">Description:</p><span>${post.description}</span>
+                    <p style="font-weight: bold;">Description:</p><span>${escapeHtml(post.description)}</span>
                 </div>
                 <div style="margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px;">
                     <p style="font-weight: bold;">Reported By:</p>
-                    <span>${post.reporter?.full_name} (${post.reporter?.course?.course_code ?? 'N/A'})</span>
-                    <div class="detail-row"><i class="fas fa-envelope"></i><span>${post.reporter?.email ?? 'N/A'}</span></div>
-                    <div class="detail-row"><i class="fas fa-phone"></i><span>${post.reporter?.phone_number ?? 'N/A'}</span></div>
+                    <span>${escapeHtml(post.reporter?.full_name)} (${escapeHtml(post.reporter?.course?.course_code ?? 'N/A')})</span>
+                    <div class="detail-row"><i class="fas fa-envelope"></i><span>${escapeHtml(post.reporter?.email ?? 'N/A')}</span></div>
+                    <div class="detail-row"><i class="fas fa-phone"></i><span>${escapeHtml(post.reporter?.phone_number ?? 'N/A')}</span></div>
                 </div>
             </div>`;
         document.getElementById('postDetailsModal').style.display = 'flex';

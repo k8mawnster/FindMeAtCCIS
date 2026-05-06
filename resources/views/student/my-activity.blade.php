@@ -64,7 +64,7 @@
                                 <i class="fas fa-edit"></i> Edit
                             </a>
                             <button class="btn-reject"
-                                onclick="cancelPost({{ $post->item_id }}, '{{ $post->name }}')">
+                                onclick="cancelPost({{ $post->item_id }}, @js($post->name))">
                                 <i class="fas fa-times"></i> Cancel
                             </button>
                         @endif

@@ -55,7 +55,7 @@
                         <button class="btn-view-details" style="width: 100px; padding: 5px 10px;"
                             onclick="showUserInfo({{ $user->user_id }})">View Info</button>
                         <button class="btn-delete-user"
-                            onclick="archiveUser({{ $user->user_id }}, '{{ addslashes($user->full_name) }}', {{ $isArchived ? 'true' : 'false' }})"
+                            onclick="archiveUser({{ $user->user_id }}, @js($user->full_name), {{ $isArchived ? 'true' : 'false' }})"
                             {{ $isArchived ? 'disabled' : '' }}
                             style="{{ $isArchived ? 'opacity: 0.5; cursor: default;' : '' }}">
                             <i class="fas fa-trash-alt"></i>
@@ -90,14 +90,14 @@
             : '<span style="color: var(--color-green-button-dark); font-weight: bold;">(ACTIVE)</span>';
         document.getElementById('user-details-body').innerHTML = `
             <div class="details-content" style="padding-top: 15px;">
-                <h4>${user.full_name} ${statusTag}</h4>
-                <div class="detail-row"><i class="fas fa-id-card"></i><span>Student ID: <strong>${user.student_id}</strong></span></div>
+                <h4>${escapeHtml(user.full_name)} ${statusTag}</h4>
+                <div class="detail-row"><i class="fas fa-id-card"></i><span>Student ID: <strong>${escapeHtml(user.student_id)}</strong></span></div>
                 <h4 style="margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px;">Academic Details</h4>
-                <div class="detail-row"><span>Course: ${user.course?.course_code ?? 'N/A'}</span></div>
-                <div class="detail-row"><span>Year/Section: ${user.section_name ?? 'N/A'}</span></div>
+                <div class="detail-row"><span>Course: ${escapeHtml(user.course?.course_code ?? 'N/A')}</span></div>
+                <div class="detail-row"><span>Year/Section: ${escapeHtml(user.section_name ?? 'N/A')}</span></div>
                 <h4 style="margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px;">Contact Information</h4>
-                <div class="detail-row"><i class="fas fa-envelope"></i><span>${user.email ?? 'N/A'}</span></div>
-                <div class="detail-row"><i class="fas fa-phone"></i><span>${user.phone_number ?? 'N/A'}</span></div>
+                <div class="detail-row"><i class="fas fa-envelope"></i><span>${escapeHtml(user.email ?? 'N/A')}</span></div>
+                <div class="detail-row"><i class="fas fa-phone"></i><span>${escapeHtml(user.phone_number ?? 'N/A')}</span></div>
             </div>`;
         document.getElementById('userInfoModal').style.display = 'flex';
     }

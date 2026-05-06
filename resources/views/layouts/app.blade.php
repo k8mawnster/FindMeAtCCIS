@@ -32,6 +32,17 @@
         Lost and Found Management System 2025.
     </footer>
 
+    <script>
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/[&<>"']/g, char => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            }[char]));
+        }
+    </script>
     @yield('scripts')
 </body>
 </html>

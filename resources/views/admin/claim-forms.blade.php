@@ -155,14 +155,14 @@
         if (!claim) return;
         document.getElementById('claim-details-body').innerHTML = `
             <div class="details-content" style="padding-top: 15px;">
-                <h4>${claim.item?.name}</h4>
-                <div class="detail-row"><i class="fas fa-user"></i><span>Claimant: ${claim.claimer_full_name}</span></div>
-                <div class="detail-row"><i class="fas fa-envelope"></i><span>${claim.claimer_email ?? 'N/A'}</span></div>
-                <div class="detail-row"><i class="fas fa-graduation-cap"></i><span>${claim.claimer_course_section ?? 'N/A'}</span></div>
-                <div class="detail-row"><i class="fas fa-calendar-alt"></i><span>Claimed: ${claim.claim_date}</span></div>
+                <h4>${escapeHtml(claim.item?.name)}</h4>
+                <div class="detail-row"><i class="fas fa-user"></i><span>Claimant: ${escapeHtml(claim.claimer_full_name)}</span></div>
+                <div class="detail-row"><i class="fas fa-envelope"></i><span>${escapeHtml(claim.claimer_email ?? 'N/A')}</span></div>
+                <div class="detail-row"><i class="fas fa-graduation-cap"></i><span>${escapeHtml(claim.claimer_course_section ?? 'N/A')}</span></div>
+                <div class="detail-row"><i class="fas fa-calendar-alt"></i><span>Claimed: ${escapeHtml(claim.claim_date)}</span></div>
                 <div style="margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px;">
                     <p style="font-weight: bold;">Proof Description:</p>
-                    <span>${claim.proof_description}</span>
+                    <span>${escapeHtml(claim.proof_description)}</span>
                 </div>
                 ${claim.proof_photo_url ? `<div style="margin-top: 10px;"><img src="/${claim.proof_photo_url}" style="max-width: 100%; border-radius: 8px;"></div>` : ''}
             </div>`;

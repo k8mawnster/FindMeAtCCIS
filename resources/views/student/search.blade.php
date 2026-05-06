@@ -46,7 +46,10 @@
             <p style="text-align: center; color: #666; margin-top: 20px;">No items found.</p>
         @else
             @foreach($items as $item)
-                @php $tag = strtolower($item->item_status) == 'lost' ? 'tag-lost' : 'tag-found'; @endphp
+                @php
+                    $tag = strtolower($item->item_status) == 'lost' ? 'tag-lost' : 'tag-found';
+                    $canClaim = $item->item_status === 'Found' && (int) $item->reported_by_user_id !== (int) session('user_id');
+                @endphp
                 <div class="admin-item-card">
                     <div class="admin-item-details">
                         <div class="item-image-box">
@@ -73,8 +76,8 @@
                     <div class="admin-actions">
                         <span class="status-tag {{ $tag }}">{{ $item->item_status }}</span>
                         <a class="btn-view-details" href="{{ route('student.items.show', $item->item_id) }}" style="text-decoration: none;">View Details</a>
-                        @if($item->item_status === 'Found')
-                            <button class="btn-approve" onclick="showClaimModal({{ $item->item_id }}, '{{ addslashes($item->name) }}')">
+                        @if($canClaim)
+                            <button class="btn-approve" onclick="showClaimModal({{ $item->item_id }}, @js($item->name))">
                                 <i class="fas fa-hand-paper"></i> Claim
                             </button>
                         @endif

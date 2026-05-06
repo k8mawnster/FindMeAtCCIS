@@ -286,6 +286,19 @@ class StudentController extends Controller
             'claim_file'       => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
         ]);
 
+        $item = Item::where('item_id', $request->item_id)
+            ->where('verification_status', 'Approved')
+            ->where('item_status', 'Found')
+            ->first();
+
+        if (!$item) {
+            return response()->json(['success' => false, 'message' => 'This item is not available to claim.']);
+        }
+
+        if ((int) $item->reported_by_user_id === (int) session('user_id')) {
+            return response()->json(['success' => false, 'message' => 'You cannot claim an item that you reported.']);
+        }
+
         $existing = Claim::where('item_id', $request->item_id)
             ->where('claimed_by_user_id', session('user_id'))
             ->whereIn('claim_status', ['Pending', 'Under Review', 'Verified'])

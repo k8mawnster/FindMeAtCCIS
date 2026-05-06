@@ -49,13 +49,13 @@ Route::middleware(['admin', 'archived'])->prefix('admin')->group(function () {
 
 // --- API Routes (AJAX calls) ---
 Route::middleware(['archived'])->prefix('api')->group(function () {
-    Route::get('/notifications', [StudentController::class, 'notifications'])->name('api.notifications');
-    Route::post('/posts/action', [AdminController::class, 'postAction'])->name('api.post.action');
-    Route::post('/claims/action', [AdminController::class, 'claimAction'])->name('api.claim.action');
-    Route::delete('/posts/{id}', [StudentController::class, 'cancelPost'])->name('api.post.cancel');
-    Route::post('/claims/submit', [StudentController::class, 'submitClaim'])->name('api.claim.submit');
-    Route::post('/users/action', [AdminController::class, 'userAction'])->name('api.user.action');
-    Route::put('/profile', [StudentController::class, 'updateProfile'])->name('api.profile.update');
+    Route::get('/notifications', [StudentController::class, 'notifications'])->middleware('student')->name('api.notifications');
+    Route::post('/posts/action', [AdminController::class, 'postAction'])->middleware('admin')->name('api.post.action');
+    Route::post('/claims/action', [AdminController::class, 'claimAction'])->middleware('admin')->name('api.claim.action');
+    Route::delete('/posts/{id}', [StudentController::class, 'cancelPost'])->middleware('student')->name('api.post.cancel');
+    Route::post('/claims/submit', [StudentController::class, 'submitClaim'])->middleware('student')->name('api.claim.submit');
+    Route::post('/users/action', [AdminController::class, 'userAction'])->middleware('admin')->name('api.user.action');
+    Route::put('/profile', [StudentController::class, 'updateProfile'])->middleware('student')->name('api.profile.update');
 });
 
 Route::post('/webhook/resend', [App\Http\Controllers\WebhookController::class, 'handle'])->name('webhook.resend');

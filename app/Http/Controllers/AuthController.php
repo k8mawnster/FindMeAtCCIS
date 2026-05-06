@@ -7,9 +7,8 @@ use App\Models\User;
 use App\Models\Course;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use App\Mail\ForgotPasswordMail;
-use App\Mail\PostStatusMail;
-use App\Mail\ClaimStatusMail;
 
 class AuthController extends Controller
 {
@@ -41,6 +40,7 @@ class AuthController extends Controller
             'user_name' => $user->full_name,
             'user_role' => $user->user_role,
         ]);
+        $request->session()->regenerate();
 
         return redirect()->route(strtolower($user->user_role) . '.dashboard');
     }
@@ -72,7 +72,7 @@ public function register(Request $request) {
         return back()->with('error', 'Student ID or Email already registered.')->withInput();
     }
 
-    $user = User::create([
+    User::create([
         'student_id'    => $request->student_id,
         'full_name'     => $request->fullname,
         'email'         => $request->email,
@@ -84,27 +84,7 @@ public function register(Request $request) {
         'user_status'   => 'Active',
     ]);
 
-    // Auto-add to Resend Audience
-    $this->addToResendAudience($user->full_name, $user->email);
-
     return redirect()->route('login')->with('success', 'Registration successful! Please log in.');
-}
-
-private function addToResendAudience(string $name, string $email) {
-    try {
-        $audienceId = env('RESEND_AUDIENCE_ID');
-        if (!$audienceId) return;
-
-        $resend = \Resend::client(env('RESEND_API_KEY'));
-        $resend->contacts->create($audienceId, [
-            'email'      => $email,
-            'first_name' => explode(' ', $name)[0],
-            'last_name'  => implode(' ', array_slice(explode(' ', $name), 1)) ?: '',
-        ]);
-    } catch (\Exception $e) {
-        // Silently fail — don't block registration if Resend is down
-        \Log::warning('Failed to add user to Resend Audience: ' . $e->getMessage());
-    }
 }
 
     // Show forgot password page
@@ -124,7 +104,7 @@ $user = User::where(function($query) use ($request) {
     ->first();
 
     if (!$user) {
-        return back()->with('error', 'DEBUG: User not found for: ' . $request->email_or_id);
+        return back()->with('success', 'If the account exists, a reset link has been sent.');
     }
 
     try {
@@ -137,10 +117,16 @@ $user = User::where(function($query) use ($request) {
 
         Mail::to($user->email)->send(new ForgotPasswordMail($user->full_name, $token));
 
-        return back()->with('success', 'DEBUG: Email sent to ' . $user->email);
+        return back()->with('success', 'If the account exists, a reset link has been sent.');
 
     } catch (\Exception $e) {
-        return back()->with('error', 'DEBUG Error: ' . $e->getMessage());
+        Log::warning('Failed to send password reset email.', [
+            'recipient' => $user->email,
+            'error' => $e->getMessage(),
+        ]);
+
+        report($e);
+        return back()->with('success', 'If the account exists, a reset link has been sent.');
     }
 }
 

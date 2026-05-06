@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Item;
 use App\Models\Claim;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use App\Mail\PostStatusMail;
 use App\Mail\ClaimStatusMail;
 use App\Services\ItemMatchNotificationService;
@@ -151,6 +152,9 @@ public function toBeClaimed() {
     }
 
     if ($action === 'approve') {
+    if ($item->verification_status !== 'Pending') {
+        return response()->json(['success' => false, 'message' => 'Only pending posts can be approved.']);
+    }
     $item->update(['verification_status' => 'Approved', 'rejection_reason' => null]);
 
     $this->sendMailSafely(
@@ -162,6 +166,9 @@ public function toBeClaimed() {
     $matchNotifications->notifyMatchesForApprovedItem($item->fresh('reporter'));
 
     } elseif ($action === 'reject') {
+        if ($item->verification_status !== 'Pending') {
+            return response()->json(['success' => false, 'message' => 'Only pending posts can be rejected.']);
+        }
         if (empty($reason)) {
             return response()->json(['success' => false, 'message' => 'Rejection reason required.']);
         }
@@ -172,6 +179,9 @@ public function toBeClaimed() {
             'post rejection notification'
         );
     } elseif ($action === 'restore') {
+        if ($item->verification_status !== 'Rejected') {
+            return response()->json(['success' => false, 'message' => 'Only rejected posts can be restored.']);
+        }
         $item->update(['verification_status' => 'Pending', 'rejection_reason' => null]);
     } else {
         return response()->json(['success' => false, 'message' => 'Invalid action.']);
@@ -189,6 +199,10 @@ public function toBeClaimed() {
     if ($action === 'resolve_by_item') {
         $claim = Claim::with(['claimedBy', 'item'])->where('item_id', $itemId)
             ->where('claim_status', 'Verified')
+            ->whereHas('item', function ($query) {
+                $query->where('verification_status', 'Approved')
+                    ->where('item_status', 'Found');
+            })
             ->first();
 
         if (!$claim) {
@@ -212,6 +226,9 @@ public function toBeClaimed() {
     }
 
     if ($action === 'set_pickup') {
+        if ($claim->claim_status !== 'Pending') {
+            return response()->json(['success' => false, 'message' => 'Only pending claims can be verified.']);
+        }
         $request->validate([
             'pickup_schedule' => 'required|date',
             'pickup_location' => 'required|string|max:255',
@@ -237,6 +254,9 @@ public function toBeClaimed() {
             'claim verified notification'
         );
     } elseif ($action === 'reject') {
+        if ($claim->claim_status !== 'Pending') {
+            return response()->json(['success' => false, 'message' => 'Only pending claims can be rejected.']);
+        }
         $claim->update(['claim_status' => 'Rejected']);
         $this->sendMailSafely(
             $claim->claimedBy->email ?? null,
@@ -244,6 +264,9 @@ public function toBeClaimed() {
             'claim rejection notification'
         );
     } elseif ($action === 'resolve') {
+        if ($claim->claim_status !== 'Verified') {
+            return response()->json(['success' => false, 'message' => 'Only verified claims can be resolved.']);
+        }
         $claim->update(['claim_status' => 'Resolved']);
         $this->sendMailSafely(
             $claim->claimedBy->email ?? null,
@@ -285,7 +308,18 @@ public function toBeClaimed() {
 
         try {
             Mail::to($recipient)->send($mail);
+
+            Log::info('Admin email notification sent.', [
+                'context' => $context,
+                'recipient' => $recipient,
+            ]);
         } catch (Throwable $exception) {
+            Log::warning('Failed to send admin email notification.', [
+                'context' => $context,
+                'recipient' => $recipient,
+                'error' => $exception->getMessage(),
+            ]);
+
             report($exception);
         }
     }

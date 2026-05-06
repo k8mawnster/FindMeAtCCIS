@@ -101,14 +101,14 @@
                 dateDisplay = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
             }
 
-            list.innerHTML += `
+            list.insertAdjacentHTML('beforeend', `
                 <div class="notification-item ${isRejected ? 'rejected' : ''}"
                     onclick="window.location.href='{{ route('student.activity') }}?view=${notif.type === 'POST_STATUS' ? 'posts' : 'claims'}';">
-                    <strong style="color: ${statusColor};">${title}</strong>
-                    <p>${description}</p>
-                    <span style="font-size: 0.7em; color: #999; display: block; margin-top: 3px;">${dateDisplay}</span>
+                    <strong style="color: ${statusColor};">${escapeHtml(title)}</strong>
+                    <p>${escapeHtml(description)}</p>
+                    <span style="font-size: 0.7em; color: #999; display: block; margin-top: 3px;">${escapeHtml(dateDisplay)}</span>
                 </div>
-            `;
+            `);
         });
         notificationsLoaded = true;
     }
